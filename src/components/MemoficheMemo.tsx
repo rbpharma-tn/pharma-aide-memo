@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Home } from "lucide-react";
+import { Home, Podcast, Youtube } from "lucide-react";
 import { MemoficheAccordion } from "./MemoficheAccordion";
 import { Button } from "@/components/ui/button";
 
@@ -10,7 +10,6 @@ const TABS = [
   { id: "quiz", label: "Quiz", enabled: false },
   { id: "glossaire", label: "Glossaire", enabled: false },
   { id: "kahoot", label: "Kahoot!", enabled: false },
-  // Optionally: icons for voice/video, left as placeholders
 ];
 
 export function MemoficheMemo() {
@@ -35,7 +34,7 @@ export function MemoficheMemo() {
       </div>
 
       {/* Tabs */}
-      <div className="flex gap-2 mb-8 w-full overflow-x-auto">
+      <div className="flex gap-2 mb-8 w-full overflow-x-auto items-center">
         {TABS.map(tab => (
           <button
             key={tab.id}
@@ -52,21 +51,25 @@ export function MemoficheMemo() {
             {tab.label}
           </button>
         ))}
-        {/* Optionally: mic + video buttons */}
-        <button
-          className="px-2 py-2 rounded-lg border bg-white text-neutral-500 ml-auto"
-          disabled
-          aria-label="Micro (à venir)"
+        {/* Icônes Podcast et YouTube */}
+        <a
+          className="px-2 py-2 rounded-lg border bg-white text-neutral-500 ml-auto flex items-center gap-1 hover:bg-gray-100 transition"
+          href="#" // lien à adapter plus tard
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Podcast"
         >
-          <svg width="20" height="20" className="inline" fill="none"><circle cx="10" cy="10" r="9" stroke="currentColor" strokeWidth="2"/><rect x="8" y="5" width="4" height="7" rx="2" fill="currentColor"/></svg>
-        </button>
-        <button
-          className="px-2 py-2 rounded-lg border bg-white text-neutral-500"
-          disabled
-          aria-label="Vidéo (à venir)"
+          <Podcast size={20} />
+        </a>
+        <a
+          className="px-2 py-2 rounded-lg border bg-white text-neutral-500 flex items-center gap-1 hover:bg-gray-100 transition"
+          href="#" // lien à adapter plus tard
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="YouTube"
         >
-          <svg width="20" height="20" className="inline" fill="none"><rect x="3" y="6" width="14" height="8" rx="2" stroke="currentColor" strokeWidth="2"/><rect x="14" y="9" width="3" height="2" rx="1" fill="currentColor"/></svg>
-        </button>
+          <Youtube size={20} />
+        </a>
       </div>
 
       {/* Progression */}
@@ -85,3 +88,4 @@ export function MemoficheMemo() {
     </div>
   );
 }
+

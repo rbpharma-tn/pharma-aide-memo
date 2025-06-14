@@ -1,13 +1,17 @@
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
+// Mise à jour et ajout des sections, dans l'ordre demandé :
 const SECTIONS = [
+  { id: "memo", label: "Mémo" },
   { id: "cas", label: "Cas comptoir" },
   { id: "questions", label: "Questions à poser" },
   { id: "orienter", label: "Quand orienter vers le médecin" },
   { id: "pathologie", label: "Pathologie et signes typiques" },
-  { id: "conseils", label: "Conseils produits" },
-  { id: "hygiene", label: "Hygiène de vie" },
+  { id: "conseils", label: "Conseils produit principal" },
+  { id: "associes", label: "Produits associés" },
+  { id: "hygiene", label: "Hygiène de vie & Alimentation" },
+  { id: "references", label: "Références bibliographiques" },
 ];
 
 export function MemoficheAccordion() {
@@ -25,3 +29,4 @@ export function MemoficheAccordion() {
     </Accordion>
   );
 }
+
