@@ -33,7 +33,10 @@ export default function MainNav() {
 
   return (
     <nav className="w-full bg-white border-b flex items-center px-4 py-3 justify-between">
-      <Link to="/" className="font-bold text-xl text-blue-700">rbpharma-tn</Link>
+      <Link to="/" className="font-bold text-xl text-blue-700 flex gap-2 items-center">
+        <span role="img" aria-label="pilule">💊</span>
+        PharmIA
+      </Link>
       <div className="flex items-center gap-4">
         {logged && (
           <>
