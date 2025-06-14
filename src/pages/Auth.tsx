@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -18,21 +17,22 @@ export default function Auth() {
   // Listen to auth, check roles & redirect if logged in
   useEffect(() => {
     // reload on auth change
-    const { data: subscription } = supabase.auth.onAuthStateChange(async (event, session) => {
+    const { subscription } = supabase.auth.onAuthStateChange((event, session) => {
       if (session?.user) {
         // Check role and redirect accordingly
         const { user } = session;
-        const { data, error } = await supabase
+        supabase
           .from("user_roles")
           .select("role")
-          .eq("user_id", user.id);
-
-        const isAdmin = data?.some((r) => r.role === "admin");
-        if (isAdmin) {
-          navigate("/admin", { replace: true });
-        } else {
-          navigate("/app", { replace: true });
-        }
+          .eq("user_id", user.id)
+          .then(({ data, error }) => {
+            const isAdmin = data?.some((r) => r.role === "admin");
+            if (isAdmin) {
+              navigate("/admin", { replace: true });
+            } else {
+              navigate("/app", { replace: true });
+            }
+          });
       }
     });
     // Check on mount if already logged
@@ -52,7 +52,7 @@ export default function Auth() {
         }
       }
     });
-    return () => subscription?.unsubscribe();
+    return () => subscription.unsubscribe();
   }, [navigate]);
 
   async function handleAuth(e: React.FormEvent) {
