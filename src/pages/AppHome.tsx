@@ -48,9 +48,27 @@ export default function AppHome() {
         .select("*")
         .order("created_at", { ascending: false });
 
-      // FIX: Use theme instead of category for filtering
+      // Filtrer par thème
       if (cat !== "all" && data) {
         data = data.filter((item) => item.theme === cat);
+      }
+
+      // Filtre supplémentaire pour masquer les fiches test/demo
+      if (data) {
+        data = data.filter(
+          (item) =>
+            !["test", "demo", "factice"].some((motCle) =>
+              [
+                item.title,
+                item.subtitle,
+                item.description
+              ]
+                .filter(Boolean)
+                .join(" ")
+                .toLowerCase()
+                .includes(motCle)
+            )
+        );
       }
 
       setMemofiches(data ?? []);
