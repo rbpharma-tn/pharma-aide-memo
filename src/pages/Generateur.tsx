@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { MemofichePreview } from "@/components/MemofichePreview";
 import { Input } from "@/components/ui/input";
@@ -112,8 +111,10 @@ export default function Generateur() {
       if (!resp.ok || !data.memofiche) {
         setError(
           data?.error ||
-            "Erreur : la génération IA n’a pas abouti. Merci de réessayer plus tard."
+          "Erreur : la génération IA n’a pas abouti. Merci de réessayer plus tard."
         );
+        // On stocke le détail raw si présent (pour affichage debug)
+        (window as any).__lastMemoficheRawError = data?.raw || null;
         setLoading(false);
         return;
       }
@@ -353,6 +354,17 @@ export default function Generateur() {
                   {error && (
                     <div className="text-center text-red-500 bg-red-50 rounded px-2 py-1 text-sm font-inter">
                       {error}
+                      {
+                        // Affiche raw error details si présents
+                        (typeof window !== "undefined" &&
+                          (window as any).__lastMemoficheRawError) && (
+                            <pre className="mt-2 text-xs text-left text-gray-800 bg-gray-100 border rounded p-2 max-h-60 overflow-auto font-mono">
+                              {typeof (window as any).__lastMemoficheRawError === "string"
+                                ? (window as any).__lastMemoficheRawError
+                                : JSON.stringify((window as any).__lastMemoficheRawError, null, 2)}
+                            </pre>
+                        )
+                      }
                     </div>
                   )}
                 </form>
