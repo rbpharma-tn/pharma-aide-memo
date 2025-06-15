@@ -91,7 +91,7 @@ export default {
 				'accordion-up': 'accordion-up 0.2s ease-out'
 			},
       fontFamily: {
-        'sora': ['Sora', 'Inter', 'sans-serif'],
+        'sans': ['Inter', 'sans-serif'],
         'inter': ['Inter', 'sans-serif'],
       },
 		}

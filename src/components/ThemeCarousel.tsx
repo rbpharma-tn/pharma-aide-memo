@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useMemo } from "react";
 import {
   ChevronLeft,
@@ -10,57 +9,82 @@ import {
   Heart,
   FlaskConical,
   MessageCircle,
-  Wrench,
+  Monitor,
 } from "lucide-react";
 
+// On met à jour toutes les couleurs pour un rendu monochrome + update dispositifs
 const themes = [
   {
     id: "maladies-courantes",
     title: "Maladies courantes",
     description: "Pathologies fréquentes au comptoir et leur prise en charge",
     icon: Stethoscope,
+    color: "text-gray-800",
+    bgColor: "bg-gray-50",
+    borderColor: "border-gray-200",
   },
   {
     id: "ordonnances",
     title: "Ordonnances",
     description: "Analyse et dispensation des prescriptions médicales",
     icon: Pill,
+    color: "text-gray-800",
+    bgColor: "bg-gray-50",
+    borderColor: "border-gray-200",
   },
   {
     id: "micronutrition",
     title: "Micronutrition",
     description: "Compléments alimentaires et conseils nutritionnels",
     icon: Leaf,
+    color: "text-gray-800",
+    bgColor: "bg-gray-50",
+    borderColor: "border-gray-200",
   },
   {
     id: "dermo-cosmetique",
     title: "Dermo-cosmétique",
     description: "Soins de la peau et produits de beauté",
     icon: Sparkles,
+    color: "text-gray-800",
+    bgColor: "bg-gray-50",
+    borderColor: "border-gray-200",
   },
   {
     id: "pharmacie-veterinaire",
     title: "Pharmacie vétérinaire",
     description: "Santé animale et médicaments vétérinaires",
     icon: Heart,
+    color: "text-gray-800",
+    bgColor: "bg-gray-50",
+    borderColor: "border-gray-200",
   },
   {
     id: "dispositifs",
     title: "Dispositifs",
     description: "Dispositifs médicaux et matériel de santé",
-    icon: Wrench,
+    icon: Monitor, // Ici on utilise l'icône d'écran pour lecteur de glycémie
+    color: "text-gray-800",
+    bgColor: "bg-gray-50",
+    borderColor: "border-gray-200",
   },
   {
     id: "pharmacologie",
     title: "Pharmacologie",
     description: "Mécanismes d'action et interactions médicamenteuses",
     icon: FlaskConical,
+    color: "text-gray-800",
+    bgColor: "bg-gray-50",
+    borderColor: "border-gray-200",
   },
   {
     id: "communication",
     title: "Communication",
     description: "Relation patient et techniques de communication",
     icon: MessageCircle,
+    color: "text-gray-800",
+    bgColor: "bg-gray-50",
+    borderColor: "border-gray-200",
   },
 ];
 
@@ -129,22 +153,24 @@ export default function ThemeCarousel() {
   };
 
   return (
-    <div className="relative select-none">
+    <div className="relative select-none font-inter">
       {/* En-tête */}
-      <h3 className="text-base md:text-lg font-semibold text-gray-900 tracking-wide mb-6 text-center uppercase">Domaines d&apos;expertise</h3>
+      <h3 className="text-lg md:text-xl font-semibold text-gray-900 tracking-wide mb-5 text-center uppercase font-inter">
+        Domaines d&apos;expertise
+      </h3>
       {/* Carrousel */}
       <div className="relative overflow-visible">
         {/* Boutons nav */}
         <button
           onClick={prevSlide}
-          className="absolute left-1 top-1/2 -translate-y-1/2 z-10 bg-white border border-gray-200 rounded-full p-2 shadow-sm hover:bg-gray-100"
+          className="absolute left-1 top-1/2 -translate-y-1/2 z-10 bg-white border border-gray-200 rounded-full p-2 shadow-sm hover:bg-gray-100 transition"
           aria-label="Précédent"
         >
           <ChevronLeft className="h-5 w-5 text-gray-500" />
         </button>
         <button
           onClick={nextSlide}
-          className="absolute right-1 top-1/2 -translate-y-1/2 z-10 bg-white border border-gray-200 rounded-full p-2 shadow-sm hover:bg-gray-100"
+          className="absolute right-1 top-1/2 -translate-y-1/2 z-10 bg-white border border-gray-200 rounded-full p-2 shadow-sm hover:bg-gray-100 transition"
           aria-label="Suivant"
         >
           <ChevronRight className="h-5 w-5 text-gray-500" />
@@ -174,13 +200,13 @@ export default function ThemeCarousel() {
                     setIsAutoPlaying(true);
                   }}
                 >
-                  <div className={`h-full bg-white border border-gray-200 rounded-xl p-6 text-center transition-all duration-200 ease-out group
-                    ${isHovered ? "shadow-md scale-105 border-gray-300 ring-1 ring-gray-100" : "shadow-sm"}
+                  <div className={`h-full ${theme.bgColor} ${theme.borderColor} border rounded-xl p-6 text-center transition-all duration-200 ease-out group
+                    ${isHovered ? "shadow-lg scale-105 border-gray-300 ring-1 ring-gray-100 bg-gray-100" : "shadow-sm"}
                   `}>
                     <div className="flex items-center justify-center mb-4">
-                      <Icon className={`h-9 w-9 mx-auto ${isHovered ? "text-gray-800" : "text-gray-400"} transition-colors`} />
+                      <Icon className={`h-9 w-9 mx-auto ${isHovered ? "text-black" : theme.color} transition-colors`} />
                     </div>
-                    <div className={`font-semibold text-base mb-2 ${isHovered ? "text-gray-900" : "text-gray-700"} transition-colors`}>
+                    <div className={`font-semibold text-base mb-2 ${isHovered ? "text-black" : "text-gray-800"} transition-colors`}>
                       {theme.title}
                     </div>
                     <div className="text-sm text-gray-500 leading-snug">{theme.description}</div>
@@ -189,6 +215,36 @@ export default function ThemeCarousel() {
               );
             })}
           </div>
+        </div>
+      </div>
+      {/* Timeline élégante */}
+      <div className="w-full flex flex-col items-center mt-10 mb-2">
+        <div className="w-full max-w-lg">
+          <ol className="flex items-center justify-between w-full">
+            {["Débutant", "Intermédiaire", "Avancé", "Expert"].map((label, i, arr) => (
+              <li key={label} className="flex-1 flex flex-col items-center relative">
+                <div className={`
+                  flex items-center justify-center z-10
+                  w-7 h-7 rounded-full
+                  font-semibold
+                  ${i === 0 ? "bg-gray-900 text-white" : i === arr.length-1 ? "bg-black text-white" : "bg-white border-2 border-gray-300 text-gray-600"}
+                  ${i !== 0 && i !== arr.length-1 && "shadow-sm"}
+                `}>
+                  {i + 1}
+                </div>
+                <div className="mt-2 text-xs font-medium text-center text-gray-600 w-16">{label}</div>
+                {/* Connecteur */}
+                {i < arr.length - 1 && (
+                  <div className={`
+                    absolute top-1/2 left-full h-1 w-full border-t-2 
+                    ${i === 0 ? "border-gray-300" : "border-gray-200"}
+                    -translate-y-1/2
+                    z-0
+                  `} />
+                )}
+              </li>
+            ))}
+          </ol>
         </div>
       </div>
       {/* Indicateurs */}

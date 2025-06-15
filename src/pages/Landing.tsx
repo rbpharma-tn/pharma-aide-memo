@@ -5,19 +5,19 @@ import ThemeCarousel from "@/components/ThemeCarousel";
 
 export default function Landing() {
   return (
-    <main className="min-h-screen bg-gray-50 flex flex-col font-sora">
+    <main className="min-h-screen bg-gray-50 flex flex-col font-inter">  {/* Font Inter */}
       <AppHeader />
       {/* HERO épuré */}
       <section className="w-full max-w-3xl mx-auto flex flex-col items-center pt-14 pb-9 px-4">
-        <h1 className="text-4xl md:text-5xl font-bold font-sans text-gray-900 text-center mb-5 leading-tight tracking-tight">
+        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 text-center mb-5 leading-tight tracking-tight font-inter">
           Les <span className="font-playfair text-gray-800">Mémofiches</span> du conseil pharmaceutique
         </h1>
-        <p className="text-base md:text-lg text-gray-600 font-normal text-center max-w-2xl mb-10">
+        <p className="text-base md:text-lg text-gray-600 font-normal text-center max-w-2xl mb-10 font-inter">
           Micro-apprentissage épuré et adaptatif, pour tous les personnels d&apos;officine. Cas pratiques, expertise concrète.
         </p>
       </section>
 
-      {/* Theme carousel élégant, monochrome */}
+      {/* Carrousel + timeline */}
       <section className="w-full max-w-5xl mx-auto px-4 py-1">
         <ThemeCarousel />
       </section>
@@ -26,47 +26,47 @@ export default function Landing() {
       <section className="w-full max-w-3xl mx-auto px-4 py-7 mt-1">
         <div className="flex flex-wrap gap-5 justify-center items-center mb-8">
           <div className="bg-white rounded-xl px-7 py-5 shadow-sm border border-gray-100 flex flex-col items-center min-w-[120px]">
-            <div className="text-xl font-bold text-gray-900">110</div>
-            <div className="text-xs text-gray-500">Mémofiches</div>
+            <div className="text-xl font-bold text-gray-900 font-inter">110</div>
+            <div className="text-xs text-gray-500 font-inter">Mémofiches</div>
           </div>
           <div className="bg-white rounded-xl px-7 py-5 shadow-sm border border-gray-100 flex flex-col items-center min-w-[120px]">
-            <div className="text-lg font-bold text-gray-900">16</div>
-            <div className="text-xs text-gray-500">Compétences</div>
+            <div className="text-lg font-bold text-gray-900 font-inter">16</div>
+            <div className="text-xs text-gray-500 font-inter">Compétences</div>
           </div>
           <div className="bg-white rounded-xl px-7 py-5 shadow-sm border border-gray-100 flex flex-col items-center min-w-[120px]">
-            <div className="text-lg font-semibold text-gray-800">4</div>
-            <div className="text-xs text-gray-500">Niveaux</div>
+            <div className="text-lg font-semibold text-gray-800 font-inter">4</div>
+            <div className="text-xs text-gray-500 font-inter">Niveaux</div>
           </div>
           <div className="bg-white rounded-xl px-7 py-5 shadow-sm border border-gray-100 flex flex-col items-center min-w-[120px]">
-            <div className="text-lg font-semibold text-gray-800">65%</div>
-            <div className="text-xs text-gray-500">Progression</div>
+            <div className="text-lg font-semibold text-gray-800 font-inter">65%</div>
+            <div className="text-xs text-gray-500 font-inter">Progression</div>
           </div>
         </div>
-        {/* CTA */}
-        <div className="bg-white rounded-2xl p-8 shadow text-center border border-gray-100">
-          <div className="text-xl font-semibold mb-3 text-gray-900">
-            Commencer votre progression ?
+        {/* CTA fidèle à la maquette */}
+        <div className="bg-white rounded-2xl p-9 shadow text-center border border-gray-100 max-w-2xl mx-auto flex flex-col items-center">
+          <div className="text-2xl font-bold mb-3 text-gray-900 font-inter">
+            Commencer votre progression&nbsp;?
           </div>
-          <div className="text-gray-600 mb-5">
+          <div className="text-base text-gray-500 mb-7 font-inter">
             Explorez les mémofiches interactives et développez vos compétences dès maintenant.
           </div>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center font-inter">
             <Link
               to="/generateur"
-              className="px-7 py-3 bg-gray-900 hover:bg-gray-800 text-white text-base rounded-lg font-semibold shadow transition"
+              className="px-8 py-3 bg-gray-900 hover:bg-gray-800 text-white text-base rounded-lg font-semibold shadow transition border-2 border-gray-900 font-inter"
             >
               Voir les mémofiches
             </Link>
             <Link
               to="/auth"
-              className="px-7 py-3 border-2 border-gray-900 text-gray-900 text-base rounded-lg font-semibold shadow-sm hover:bg-gray-100 transition"
+              className="px-8 py-3 bg-white border-2 border-gray-900 text-gray-900 text-base rounded-lg font-semibold shadow-sm hover:bg-gray-100 transition font-inter"
             >
               Créer un compte
             </Link>
           </div>
         </div>
       </section>
-      <footer className="text-center text-xs text-gray-400 py-5 opacity-90">
+      <footer className="text-center text-xs text-gray-400 py-5 opacity-90 font-inter">
         &copy; {new Date().getFullYear()} PharmIA – conçu pour l’officine moderne
       </footer>
     </main>
