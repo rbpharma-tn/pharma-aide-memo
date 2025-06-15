@@ -1,3 +1,4 @@
+import AppHeader from "@/components/AppHeader";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -90,7 +91,8 @@ export default function Auth() {
 
   return (
     <main className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-cyan-50">
-      <div className="w-full max-w-md bg-white rounded shadow p-8">
+      <AppHeader />
+      <div className="w-full max-w-md bg-white rounded shadow p-8 mt-8">
         <h2 className="text-2xl font-bold mb-6 text-center">
           {view === "login" ? "Connexion" : "Inscription"}
         </h2>

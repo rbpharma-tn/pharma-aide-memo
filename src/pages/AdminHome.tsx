@@ -1,4 +1,4 @@
-
+import AppHeader from "@/components/AppHeader";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -36,7 +36,8 @@ export default function AdminHome() {
 
   return (
     <main className="p-6 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">Interface administrateur</h1>
+      <AppHeader />
+      <h1 className="text-2xl font-bold mb-4 mt-6">Interface administrateur</h1>
       <p className="mb-8 text-gray-600">Gestion avancée des mémofiches à venir…</p>
       <ul className="space-y-4">
         {memofiches.length === 0 && (

@@ -1,10 +1,8 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import AppSidebar from "@/components/AppSidebar";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
-import LogoHeader from "@/components/LogoHeader";
 import {
   Card,
   CardContent,
@@ -12,6 +10,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
+import AppHeader from "@/components/AppHeader";
 
 // Type for memofiches based on your supabase db
 type Memofiche = {
@@ -61,7 +60,7 @@ export default function AppHome() {
   return (
     <SidebarProvider>
       <div className="w-full min-h-screen bg-white flex flex-col">
-        <LogoHeader />
+        <AppHeader />
         <div className="flex flex-1 min-h-0">
           <AppSidebar />
           <SidebarInset className="flex-1 p-0">

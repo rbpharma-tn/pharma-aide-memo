@@ -1,14 +1,12 @@
 
+import AppHeader from "@/components/AppHeader";
 import { Link } from "react-router-dom";
 
 export default function Landing() {
   return (
     <main className="min-h-screen flex flex-col items-center justify-center px-4 bg-white">
-      <div className="max-w-lg w-full text-center">
-        <h1 className="text-4xl font-bold mb-1 text-black flex items-center justify-center gap-2">
-          <span role="img" aria-label="pilule">💊</span>
-          PharmIA
-        </h1>
+      <AppHeader />
+      <div className="max-w-lg w-full text-center mt-20">
         <h2 className="text-lg font-semibold text-gray-800 mb-3">
           Mémofiches Cas Comptoir à l'Officine
         </h2>
