@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import AppHeader from "@/components/AppHeader";
 import ThemeCarousel from "@/components/ThemeCarousel";
@@ -6,34 +7,39 @@ export default function Landing() {
   return (
     <main className="min-h-screen bg-white flex flex-col font-inter">
       <AppHeader />
-      <section className="flex flex-col items-center justify-center w-full py-16 px-4">
-        <h1 className="text-4xl md:text-6xl font-black text-gray-900 text-center mb-6 tracking-tight font-inter">
+      {/* Section de titre principale avec taille réduite */}
+      <section className="flex flex-col items-center justify-center w-full py-14 px-4">
+        <h1 className="text-2xl md:text-4xl font-black text-gray-900 text-center mb-5 tracking-tight font-inter">
           Mémofiches conseil à l&apos;officine
         </h1>
         <p className="text-base md:text-xl font-medium text-gray-500 text-center max-w-2xl font-inter">
           Micro-apprentissage adaptatif et personnalisé du personnel de la pharmacie à travers des cas comptoir 100% pratiques
         </p>
       </section>
+      {/* Carrousel + timeline */}
       <section className="w-full max-w-5xl mx-auto px-4 py-1">
         <ThemeCarousel />
       </section>
-      <section className="w-full max-w-3xl mx-auto px-4 py-7 mt-1">
-        <div className="flex flex-wrap gap-5 justify-center items-center mb-8">
+      {/* Stats sobres simplifiées */}
+      <section className="w-full max-w-3xl mx-auto px-4 py-8 mt-2">
+        <div className="flex flex-wrap gap-5 justify-center items-center mb-9">
           <div className="bg-white rounded-xl px-7 py-5 shadow-sm border border-gray-100 flex flex-col items-center min-w-[120px]">
-            <div className="text-xl font-bold text-gray-900 font-inter">110</div>
-            <div className="text-xs text-gray-500 font-inter">Mémofiches</div>
+            <div className="text-xl md:text-2xl font-bold text-gray-900 font-inter">110</div>
+            <div className="text-xs md:text-sm text-gray-500 font-inter">Mémofiches</div>
           </div>
           <div className="bg-white rounded-xl px-7 py-5 shadow-sm border border-gray-100 flex flex-col items-center min-w-[120px]">
-            <div className="text-lg font-bold text-gray-900 font-inter">16</div>
-            <div className="text-xs text-gray-500 font-inter">Compétences</div>
+            <div className="text-lg md:text-xl font-bold text-gray-900 font-inter">16</div>
+            <div className="text-xs md:text-sm text-gray-500 font-inter">Compétences</div>
           </div>
           <div className="bg-white rounded-xl px-7 py-5 shadow-sm border border-gray-100 flex flex-col items-center min-w-[120px]">
-            <div className="text-lg font-semibold text-gray-800 font-inter">4</div>
-            <div className="text-xs text-gray-500 font-inter">Niveaux</div>
+            <div className="text-lg md:text-xl font-bold text-gray-900 font-inter">4</div>
+            <div className="text-xs md:text-sm text-gray-500 font-inter">Niveaux</div>
           </div>
-          <div className="bg-white rounded-xl px-7 py-5 shadow-sm border border-gray-100 flex flex-col items-center min-w-[120px]">
-            <div className="text-lg font-semibold text-gray-800 font-inter">65%</div>
-            <div className="text-xs text-gray-500 font-inter">Progression</div>
+        </div>
+        {/* Titre niveaux + progression déplacée en bas */}
+        <div className="flex flex-col items-center mb-1">
+          <div className="text-sm md:text-base font-medium text-gray-700 mb-2 font-inter uppercase tracking-wider">
+            Niveaux de progression d&apos;apprentissage
           </div>
         </div>
         <div className="bg-white rounded-2xl p-9 shadow text-center border border-gray-100 max-w-2xl mx-auto flex flex-col items-center">
