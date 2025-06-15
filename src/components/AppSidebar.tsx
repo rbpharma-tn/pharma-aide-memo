@@ -64,6 +64,22 @@ export default function AppSidebar() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+              <SidebarMenuItem key="generateur">
+                <SidebarMenuButton asChild isActive={window.location.pathname === "/generateur"}>
+                  <NavLink
+                    to="/generateur"
+                    className={
+                      "flex items-center gap-2 rounded px-2 py-2 transition-colors" +
+                      (window.location.pathname === "/generateur"
+                        ? " bg-blue-100 text-blue-700 font-bold shadow"
+                        : " text-gray-500 hover:bg-gray-200")
+                    }
+                  >
+                    <span>✨</span>
+                    {state === "expanded" && <span>Générateur IA</span>}
+                  </NavLink>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

@@ -9,6 +9,7 @@ import Landing from "@/pages/Landing";
 import Auth from "@/pages/Auth";
 import AppHome from "@/pages/AppHome";
 import AdminHome from "@/pages/AdminHome";
+import Generateur from "@/pages/Generateur";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ const App = () => (
           <Route path="/" element={<Landing />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/app" element={<AppHome />} />
+          <Route path="/generateur" element={<Generateur />} />
           <Route path="/admin" element={<AdminHome />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
