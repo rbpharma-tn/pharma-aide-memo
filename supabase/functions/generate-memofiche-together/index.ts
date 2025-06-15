@@ -3,8 +3,8 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
-// Utilise la clé déjà stockée dans les secrets
-const apiKey = Deno.env.get("DEEPSEEK_API_KEY"); // renomme si tu veux un secret spécifique à Together
+// Utilise la clé déjà stockée dans les secrets : API_TOGETHER
+const apiKey = Deno.env.get("API_TOGETHER");
 
 const TOGETHER_CHAT_URL = "https://api.together.xyz/v1/chat/completions";
 const DEFAULT_MODEL = "togethercomputer/llama-3-70b-chat"; // Change ici pour le modèle voulu
