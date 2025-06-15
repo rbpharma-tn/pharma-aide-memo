@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -12,6 +11,8 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import AppHeader from "@/components/AppHeader";
+import { MemofichePreview } from "@/components/MemofichePreview";
+import { Button } from "@/components/ui/button";
 
 // Type for memofiches based on your supabase db
 type Memofiche = {
@@ -28,6 +29,7 @@ export default function AppHome() {
   const [loading, setLoading] = useState(true);
   const [searchParams] = useSearchParams();
   const cat = searchParams.get("cat") || "all";
+  const [showPreview, setShowPreview] = useState(false);
 
   useEffect(() => {
     let ignore = false;
@@ -67,9 +69,15 @@ export default function AppHome() {
           <AppSidebar />
           <SidebarInset className="flex-1 p-0">
             <main className="max-w-6xl mx-auto py-10 px-4 md:px-8">
-              <h1 className="text-2xl font-playfair font-bold mb-6 text-gray-800 flex items-center gap-2">
-                Mes mémofiches
-              </h1>
+              <div className="flex items-center justify-between mb-6">
+                <h1 className="text-2xl font-playfair font-bold text-gray-800 flex items-center gap-2">
+                  Mes mémofiches
+                </h1>
+                <Button variant="outline" size="sm" onClick={() => setShowPreview((v) => !v)}>
+                  {showPreview ? "Masquer l’aperçu" : "Voir un exemple"}
+                </Button>
+              </div>
+              {showPreview && <MemofichePreview onClose={() => setShowPreview(false)} />}
               {loading ? (
                 <div className="text-center text-gray-400 pt-12 animate-pulse">
                   Chargement…
