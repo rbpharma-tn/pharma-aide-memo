@@ -21,6 +21,21 @@ serve(async (req: Request) => {
   }
 
   try {
+    // DEBUG: Affiche une info sur la présence de la clé API_TOGETHER (jamais la clé complète)
+    if (!apiKey) {
+      console.error("[DEBUG Together API] API_TOGETHER absente ou vide.");
+      return new Response(
+        JSON.stringify({ error: "Clé API_Together absente dans l'env (Supabase secret: API_TOGETHER)." }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    } else {
+      // N'affiche que les 6 premiers caractères (pour vérifier rapidemment laquelle est chargée)
+      console.log(`[DEBUG Together API] API_TOGETHER loaded, starts with: ${apiKey.slice(0, 6)}`);
+    }
+
     // On récupère aussi le "supplement.text" (texte collé)
     const { theme, supplement, model } = await req.json();
 
