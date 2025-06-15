@@ -217,36 +217,6 @@ export default function ThemeCarousel() {
           </div>
         </div>
       </div>
-      {/* Timeline élégante */}
-      <div className="w-full flex flex-col items-center mt-10 mb-2">
-        <div className="w-full max-w-lg">
-          <ol className="flex items-center justify-between w-full">
-            {["Débutant", "Intermédiaire", "Avancé", "Expert"].map((label, i, arr) => (
-              <li key={label} className="flex-1 flex flex-col items-center relative">
-                <div className={`
-                  flex items-center justify-center z-10
-                  w-7 h-7 rounded-full
-                  font-semibold
-                  ${i === 0 ? "bg-gray-900 text-white" : i === arr.length-1 ? "bg-black text-white" : "bg-white border-2 border-gray-300 text-gray-600"}
-                  ${i !== 0 && i !== arr.length-1 && "shadow-sm"}
-                `}>
-                  {i + 1}
-                </div>
-                <div className="mt-2 text-xs font-medium text-center text-gray-600 w-16">{label}</div>
-                {/* Connecteur */}
-                {i < arr.length - 1 && (
-                  <div className={`
-                    absolute top-1/2 left-full h-1 w-full border-t-2 
-                    ${i === 0 ? "border-gray-300" : "border-gray-200"}
-                    -translate-y-1/2
-                    z-0
-                  `} />
-                )}
-              </li>
-            ))}
-          </ol>
-        </div>
-      </div>
       {/* Indicateurs */}
       <div className="flex justify-center mt-6 space-x-2">
         {Array.from({ length: themes.length - visibleCards + 1 }).map((_, i) => (
