@@ -101,7 +101,7 @@ export default function Generateur() {
       };
 
       const resp = await fetch(
-        "https://fxohysiwchvmyhzdtffq.functions.supabase.co/generate-memofiche-together",
+        "https://fxohysiwchvmyhzdtffq.functions.supabase.co/generate-memofiche-gemini",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
