@@ -29,9 +29,10 @@ export default function AppHome() {
     });
     async function fetchMemofiches() {
       setLoading(true);
-      let query = supabase.from("memofiches").select("*").order("created_at", { ascending: false });
+      let queryBuilder = supabase.from("memofiches").select("*").order("created_at", { ascending: false });
+      let query = queryBuilder;
       if (cat !== "all") {
-        query = query.eq("category", cat);
+        query = queryBuilder.eq("category", cat);
       }
       const { data, error } = await query;
       setMemofiches(data ?? []);
