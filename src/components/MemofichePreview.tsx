@@ -1,10 +1,25 @@
-
 import { useState } from "react";
 import { Home, Podcast, Youtube } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MemoficheAccordion } from "./MemoficheAccordion";
 
-export function MemofichePreview({ onClose }: { onClose?: () => void }) {
+// Ajout des props pour overrider le contenu si généré par IA
+type Section = { id: string; label: string; content: string };
+type Props = {
+  onClose?: () => void;
+  overrideTitle?: string;
+  overrideSubtitle?: string;
+  overrideDescription?: string;
+  overrideSections?: Section[];
+};
+
+export function MemofichePreview({
+  onClose,
+  overrideTitle,
+  overrideSubtitle,
+  overrideDescription,
+  overrideSections,
+}: Props) {
   const [activeTab, setActiveTab] = useState("memo");
   const TABS = [
     { id: "memo", label: "Memo", enabled: true },
@@ -15,6 +30,24 @@ export function MemofichePreview({ onClose }: { onClose?: () => void }) {
   ];
   const PROGRESS = 0;
 
+  // Affichage dynamique du contenu IA ou fallback sur mock
+  const title = overrideTitle || "Candidose Vaginale";
+  const subtitle = overrideSubtitle || "";
+  const description = overrideDescription || "";
+  const sections: Section[] =
+    overrideSections ||
+    [
+      { id: "memo", label: "Mémo", content: "Contenu généré par l'IA ici…" },
+      { id: "cas", label: "Cas comptoir", content: "…" },
+      { id: "questions", label: "Questions à poser", content: "…" },
+      { id: "orienter", label: "Quand orienter vers le médecin", content: "…" },
+      { id: "pathologie", label: "Pathologie et signes typiques", content: "…" },
+      { id: "conseils", label: "Conseils produit principal", content: "…" },
+      { id: "associes", label: "Produits associés", content: "…" },
+      { id: "hygiene", label: "Hygiène de vie & Alimentation", content: "…" },
+      { id: "references", label: "Références bibliographiques", content: "…" },
+    ];
+
   return (
     <div className="relative py-10 px-6 md:px-16 bg-gray-50 min-h-[90vh] rounded-xl shadow-lg max-w-3xl mx-auto my-10">
       {/* Header */}
@@ -22,7 +55,10 @@ export function MemofichePreview({ onClose }: { onClose?: () => void }) {
         <div />
         <div className="flex flex-col items-center grow">
           <span className="text-xl md:text-2xl text-gray-500 font-medium mb-1">Mémo fiche conseil</span>
-          <span className="text-3xl md:text-4xl font-bold tracking-tight text-gray-900">Candidose Vaginale</span>
+          <span className="text-3xl md:text-4xl font-bold tracking-tight text-gray-900">{title}</span>
+          {subtitle && (
+            <span className="text-base text-gray-500 font-medium mt-1">{subtitle}</span>
+          )}
         </div>
         {onClose ? (
           <Button variant="ghost" size="icon" aria-label="Fermer l’aperçu" onClick={onClose}>
@@ -85,8 +121,21 @@ export function MemofichePreview({ onClose }: { onClose?: () => void }) {
         <span className="text-xs font-semibold text-neutral-600 min-w-[80px] text-right">Progression: {PROGRESS}%</span>
       </div>
       {/* Accordéons */}
-      <MemoficheAccordion />
+      <div className="w-full mt-6 space-y-3">
+        {sections.map(section => (
+          <div key={section.id} className="mb-3 bg-white rounded-lg shadow border">
+            <div className="text-base font-medium px-5 py-4">{section.label}</div>
+            <div className="px-6 pb-5 text-muted-foreground whitespace-pre-line">
+              {section.content}
+            </div>
+          </div>
+        ))}
+      </div>
+      {description && (
+        <div className="mt-8 text-gray-600 text-base leading-relaxed">
+          <strong>Description :</strong> {description}
+        </div>
+      )}
     </div>
   );
 }
-

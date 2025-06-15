@@ -5,18 +5,59 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { MemofichePreview } from "./MemofichePreview";
 
+type MemoficheStruct = {
+  title: string;
+  subtitle?: string;
+  description?: string;
+  sections?: { id: string; label: string; content: string }[];
+};
+
 export function MemoficheAIGenerator({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [theme, setTheme] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
+  const [memofiche, setMemofiche] = useState<MemoficheStruct | null>(null);
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
+    setAiError(null);
+    setMemofiche(null);
+
+    try {
+      const resp = await fetch(
+        "https://fxohysiwchvmyhzdtffq.functions.supabase.co/generate-memofiche-together",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ theme }),
+        }
+      );
+      const data = await resp.json();
+
+      if (!resp.ok || !data.memofiche) {
+        setAiError(
+          data?.error ||
+            "Erreur : la génération IA n’a pas abouti. Merci de réessayer plus tard."
+        );
+        setLoading(false);
+        return;
+      }
+
+      setMemofiche(data.memofiche);
       setShowPreview(true);
-    }, 1700);
+    } catch (err: any) {
+      setAiError(
+        typeof err === "string"
+          ? err
+          : err?.message || "Erreur inconnue lors de la génération IA."
+      );
+    } finally {
+      setLoading(false);
+    }
   }
 
   // Pour réinitialiser la modale à chaque ouverture
@@ -25,6 +66,8 @@ export function MemoficheAIGenerator({ open, onClose }: { open: boolean; onClose
       setTheme("");
       setLoading(false);
       setShowPreview(false);
+      setMemofiche(null);
+      setAiError(null);
       onClose();
     }
   }
@@ -64,11 +107,21 @@ export function MemoficheAIGenerator({ open, onClose }: { open: boolean; onClose
                   Patientez un instant…<br />Votre mémofiche se prépare !
                 </div>
               )}
+              {aiError && (
+                <div className="mt-2 text-center text-red-500 bg-red-50 rounded px-2 py-1 text-sm">
+                  {aiError}
+                </div>
+              )}
             </form>
-          ) : (
+          ) : memofiche ? (
             <div className="w-full">
               <MemofichePreview
-                // On injecte le sujet dans la preview
+                {...(memofiche && {
+                  overrideTitle: memofiche.title,
+                  overrideSubtitle: memofiche.subtitle,
+                  overrideDescription: memofiche.description,
+                  overrideSections: memofiche.sections,
+                })}
                 onClose={() => handleDialogOpenChange(false)}
               />
               <div className="flex justify-center mt-4">
@@ -77,10 +130,13 @@ export function MemoficheAIGenerator({ open, onClose }: { open: boolean; onClose
                 </Button>
               </div>
             </div>
+          ) : (
+            <div className="w-full text-center py-8 text-gray-500">
+              Erreur lors de la génération de la mémofiche.
+            </div>
           )}
         </div>
       </DialogContent>
     </Dialog>
   );
 }
-
