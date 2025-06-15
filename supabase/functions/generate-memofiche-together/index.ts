@@ -3,7 +3,11 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
-const apiKey = Deno.env.get("DEEPSEEK_API_KEY");
+// Utilise la clé déjà stockée dans les secrets
+const apiKey = Deno.env.get("DEEPSEEK_API_KEY"); // renomme si tu veux un secret spécifique à Together
+
+const TOGETHER_CHAT_URL = "https://api.together.xyz/v1/chat/completions";
+const DEFAULT_MODEL = "togethercomputer/llama-3-70b-chat"; // Change ici pour le modèle voulu
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -18,7 +22,7 @@ serve(async (req: Request) => {
 
   try {
     // On récupère aussi le "supplement.text" (texte collé)
-    const { theme, supplement } = await req.json();
+    const { theme, supplement, model } = await req.json();
 
     if (!theme || typeof theme !== "string") {
       return new Response(JSON.stringify({ error: "Missing or invalid theme" }), {
@@ -63,15 +67,15 @@ ${pastedContext}
 ${systemPrompt}`;
     }
 
-    // Appel DeepSeek Chat Completions
-    const deepseekResponse = await fetch("https://api.deepseek.com/v1/chat/completions", {
+    // Appel Together Chat Completions
+    const togetherResponse = await fetch(TOGETHER_CHAT_URL, {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${apiKey}`,
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "deepseek-chat",
+        model: typeof model === "string" && model.length > 0 ? model : DEFAULT_MODEL,
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: `Sujet : ${theme}` }
@@ -81,12 +85,12 @@ ${systemPrompt}`;
       }),
     });
 
-    const deepseekData = await deepseekResponse.json();
+    const togetherData = await togetherResponse.json();
 
     // Extraction du résultat
     const rawContent =
-      deepseekData.choices?.[0]?.message?.content ||
-      deepseekData.choices?.[0]?.data?.[0]?.text ||
+      togetherData.choices?.[0]?.message?.content ||
+      togetherData.choices?.[0]?.data?.[0]?.text ||
       "";
 
     // Vérifier : JSON direct ou stringifiable ?
@@ -118,8 +122,8 @@ ${systemPrompt}`;
       status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
-  } catch (err) {
-    return new Response(JSON.stringify({ error: err.message || "Unknown error" }), {
+  } catch (err: any) {
+    return new Response(JSON.stringify({ error: err?.message || "Unknown error" }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" }
     });
