@@ -44,9 +44,9 @@ export default function AppHome() {
         .select("*")
         .order("created_at", { ascending: false });
 
-      // If filtering by category
+      // FIX: Use theme instead of category for filtering
       if (cat !== "all" && data) {
-        data = data.filter((item) => item.category === cat);
+        data = data.filter((item) => item.theme === cat);
       }
 
       setMemofiches(data ?? []);
