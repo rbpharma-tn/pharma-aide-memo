@@ -1,14 +1,31 @@
-
 import { Link } from "react-router-dom";
-import { ArrowRight, Book, BarChart, Star, Crown } from "lucide-react";
+import { ArrowRight, Star, ChevronRight, ChevronDown } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
 import ThemeCarousel from "@/components/ThemeCarousel";
+import { useState, useEffect } from "react";
 
 export default function Landing() {
+  // État pour détecter le mode mobile / desktop (pour l'orientation des flèches)
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  // Liste des niveaux
+  const niveaux = [
+    { label: "Débutant", stars: 1 },
+    { label: "Intermédiaire", stars: 2 },
+    { label: "Avancé", stars: 3 },
+    { label: "Expert", stars: 4 },
+  ];
+
   return (
     <main className="min-h-screen bg-white flex flex-col font-inter">
       <AppHeader />
-      {/* Section de titre principale avec taille réduite */}
+      {/* Section de titre principale */}
       <section className="flex flex-col items-center justify-center w-full py-14 px-4">
         <h1 className="text-2xl md:text-3xl font-black text-gray-900 text-center mb-5 tracking-tight font-inter">
           Mémofiches conseil à l&apos;officine
@@ -38,83 +55,51 @@ export default function Landing() {
           </div>
         </div>
       </section>
-      {/* Niveaux de progression d'apprentissage : titre + timeline améliorée */}
+      {/* Niveaux de progression d'apprentissage : parcours monochrome simplifié */}
       <section className="w-full max-w-3xl mx-auto px-4 pb-10 flex flex-col items-center">
         <div className="text-lg md:text-xl font-semibold text-gray-900 tracking-wide mb-7 text-center uppercase font-inter">
           Niveaux d&apos;apprentissage
         </div>
-        <div className="w-full max-w-2xl flex flex-col items-center animate-fade-in mt-4">
-          <ol className="flex items-center justify-between w-full gap-0 md:gap-4 px-2 relative">
-            {[
-              {
-                number: 1,
-                label: "Débutant",
-                Icon: Book,
-                color: "text-blue-600",
-                bar: "bg-blue-100",
-                border: "border-blue-200"
-              },
-              {
-                number: 2,
-                label: "Intermédiaire",
-                Icon: BarChart,
-                color: "text-green-600",
-                bar: "bg-green-100",
-                border: "border-green-200"
-              },
-              {
-                number: 3,
-                label: "Avancé",
-                Icon: Star,
-                color: "text-yellow-500",
-                bar: "bg-yellow-100",
-                border: "border-yellow-200"
-              },
-              {
-                number: 4,
-                label: "Expert",
-                Icon: Crown,
-                color: "text-fuchsia-700",
-                bar: "bg-fuchsia-100",
-                border: "border-fuchsia-200"
-              }
-            ].map((step, i, arr) => (
-              <li key={step.label} className="flex-1 flex flex-col items-center relative group z-0">
-                {/* Connecteur gauche */}
-                {i > 0 && (
-                  <div
-                    className={`absolute left-0 top-1/2 -translate-y-1/2 z-0 w-1/2 h-2 rounded-l-full
-                      ${arr[i].bar}
-                    `}
+        <nav
+          aria-label="Parcours niveaux"
+          className={`
+            flex ${isMobile ? "flex-col items-center gap-6" : "flex-row items-center gap-0"}
+            w-full justify-center
+            animate-fade-in
+            mt-4
+          `}
+        >
+          {niveaux.map((step, i) => (
+            <div key={step.label} className="flex flex-col items-center">
+              {/* Icônes étoiles pleines, monochromes */}
+              <div className="flex items-center justify-center mb-2 gap-1">
+                {[...Array(step.stars)].map((_, idx) => (
+                  <Star
+                    key={idx}
+                    className="w-6 h-6 md:w-7 md:h-7 text-gray-800 fill-gray-900"
+                    strokeWidth={1.5}
                   />
-                )}
-                {/* Icône + Numéro dans un cercle */}
-                <div
-                  className={`z-10 w-14 h-14 md:w-16 md:h-16 rounded-full border-2 ${step.border} bg-white shadow transition duration-200 flex flex-col items-center justify-center group-hover:scale-110 animate-scale-in`}
-                >
-                  <span className={`block text-xs text-gray-400 font-extrabold mb-1`}>{step.number}.</span>
-                  <step.Icon className={`w-7 h-7 md:w-8 md:h-8 ${step.color} drop-shadow`} />
+                ))}
+              </div>
+              {/* Label : en gras mais monochrome */}
+              <div className="text-sm md:text-base font-semibold text-gray-800 text-center">
+                {step.label}
+              </div>
+              {/* Flèche uniquement si ce n'est pas le dernier niveau */}
+              {i < niveaux.length - 1 && (
+                <div className="flex flex-col items-center justify-center">
+                  {isMobile ? (
+                    <ChevronDown className="w-5 h-5 text-gray-400 my-2" aria-label="étape suivante" />
+                  ) : (
+                    <ChevronRight className="w-5 h-5 text-gray-400 mx-6" aria-label="étape suivante" />
+                  )}
                 </div>
-                {/* Label */}
-                <div
-                  className={`mt-3 text-xs md:text-sm font-semibold text-center ${step.color} transition-all group-hover:scale-105`}
-                >
-                  {step.label}
-                </div>
-                {/* Connecteur droit */}
-                {i < arr.length - 1 && (
-                  <div
-                    className={`absolute right-0 top-1/2 -translate-y-1/2 z-0 w-1/2 h-2 rounded-r-full
-                      ${arr[i].bar}
-                    `}
-                  />
-                )}
-              </li>
-            ))}
-          </ol>
-        </div>
+              )}
+            </div>
+          ))}
+        </nav>
       </section>
-      {/* Bloc d'appel à l'action inspiré de l'image */}
+      {/* Bloc d'appel à l'action */}
       <section className="w-full flex justify-center py-12 px-4">
         <div className="bg-white w-full max-w-2xl rounded-2xl shadow border border-gray-100 flex flex-col items-center py-10 px-5">
           <h2 className="text-2xl md:text-3xl font-extrabold text-gray-900 text-center mb-3">Prêt à commencer votre formation&nbsp;?</h2>
@@ -144,4 +129,3 @@ export default function Landing() {
     </main>
   );
 }
-
