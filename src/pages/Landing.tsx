@@ -55,36 +55,33 @@ export default function Landing() {
           </div>
         </div>
       </section>
-      {/* Niveaux de progression d'apprentissage : version épurée et horizontale */}
+      {/* Niveaux de progression d'apprentissage : version épurée, étoiles sous le label */}
       <section className="w-full max-w-3xl mx-auto px-4 pb-10 flex flex-col items-center">
         <div className="text-lg md:text-xl font-semibold text-gray-900 tracking-wide mb-7 text-center uppercase font-inter">
           Niveaux d&apos;apprentissage
         </div>
         <nav
           aria-label="Parcours niveaux"
-          className={`
-            flex flex-row items-center justify-center gap-0 w-full animate-fade-in mt-2
-          `}
+          className="flex flex-row items-end justify-center w-full animate-fade-in mt-2"
         >
           {niveaux.map((step, i) => (
-            <div key={step.label} className="flex flex-row items-center">
-              {/* Étoiles monochromes correspondant au niveau */}
-              <div className="flex items-center gap-1">
-                {[...Array(step.stars)].map((_, idx) => (
-                  <Star
-                    key={idx}
-                    className="w-6 h-6 md:w-7 md:h-7 text-gray-700 fill-gray-900"
-                    strokeWidth={1.1}
-                  />
-                ))}
-              </div>
-              {/* Label lisible sous les étoiles */}
-              <div className="ml-2 mr-4 text-base md:text-lg font-medium text-gray-800 min-w-[100px] text-left">
-                {step.label}
+            <div key={step.label} className="flex flex-row items-end">
+              {/* Bloc niveau : label en haut, étoiles en bas */}
+              <div className="flex flex-col items-center mx-2">
+                <span className="text-base md:text-lg font-medium text-gray-800 mb-2">{step.label}</span>
+                <div className="flex gap-1">
+                  {[...Array(step.stars)].map((_, idx) => (
+                    <Star
+                      key={idx}
+                      className="w-5 h-5 md:w-5 md:h-5 text-gray-700 fill-gray-900"
+                      strokeWidth={1.1}
+                    />
+                  ))}
+                </div>
               </div>
               {/* Flèche vers la droite pour la progression (sauf le dernier) */}
               {i < niveaux.length - 1 && (
-                <ChevronRight className="w-6 h-6 mx-2 text-gray-400" aria-label="progresse vers" />
+                <ChevronRight className="w-7 h-7 mx-2 text-gray-400 mb-3" aria-label="progresse vers" />
               )}
             </div>
           ))}
