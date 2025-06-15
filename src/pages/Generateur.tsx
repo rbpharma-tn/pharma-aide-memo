@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { MemofichePreview } from "@/components/MemofichePreview";
 import { Input } from "@/components/ui/input";
@@ -173,7 +172,17 @@ export default function Generateur() {
                   </Button>
                 </div>
                 <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-                  {/* --- Champs Manuels avant la génération IA --- */}
+                  {/* Champ sujet ("Entrez un sujet") déplacé et élargi */}
+                  <Input
+                    placeholder="Entrez un sujet, ex : Otite du nourrisson"
+                    value={theme}
+                    onChange={e => setTheme(e.target.value)}
+                    required
+                    autoFocus
+                    className="text-lg font-inter py-4 px-5 rounded-lg shadow-sm border-2 border-indigo-200 w-full mb-2 focus:ring-2 focus:ring-indigo-300"
+                    disabled={loading}
+                  />
+                  {/* --- Champs Manuels sous le champ sujet --- */}
                   <div className="flex flex-col gap-3 mb-2">
                     <label className="text-sm font-medium text-gray-700">
                       Photo Mémofiche
@@ -228,15 +237,6 @@ export default function Generateur() {
                     />
                   </div>
                   {/* --- Fin champs manuels --- */}
-                  <Input
-                    placeholder="Entrez un sujet, ex : Otite du nourrisson"
-                    value={theme}
-                    onChange={e => setTheme(e.target.value)}
-                    required
-                    autoFocus
-                    className="text-base font-inter"
-                    disabled={loading}
-                  />
                   <Button
                     type="submit"
                     className="mt-1 font-inter"
