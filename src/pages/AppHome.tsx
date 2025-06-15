@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -61,14 +62,14 @@ export default function AppHome() {
   }, [navigate, cat]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className="min-h-screen flex flex-col bg-gray-50">
       {/* HEADER global toujours visible */}
       <AppHeader />
       <SidebarProvider>
         <div className="flex flex-1 min-h-0 w-full">
           <AppSidebar />
-          <SidebarInset className="flex-1 p-0">
-            <main className="max-w-6xl mx-auto py-10 px-4 md:px-8">
+          <SidebarInset className="flex-1 flex justify-center items-center py-8 px-2">
+            <main className="w-full max-w-4xl bg-white rounded-xl shadow-lg py-10 px-6 md:px-12">
               <div className="flex items-center justify-between mb-6">
                 <h1 className="text-2xl font-playfair font-bold text-gray-800 flex items-center gap-2">
                   Mes mémofiches
