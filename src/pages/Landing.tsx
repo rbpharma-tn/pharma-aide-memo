@@ -1,7 +1,6 @@
-
 import { Link } from "react-router-dom";
 import AppHeader from "@/components/AppHeader";
-import { ArrowLeft, ArrowRight, Help } from "lucide-react";
+import { ArrowLeft, ArrowRight, CircleHelp } from "lucide-react";
 
 const expertises = [
   {
@@ -10,7 +9,7 @@ const expertises = [
     desc: "Analyse et dispensation des prescriptions médicales",
   },
   {
-    icon: <Help className="h-6 w-6 mb-2 text-blue-700" />,
+    icon: <CircleHelp className="h-6 w-6 mb-2 text-blue-700" />,
     title: "Micronutrition",
     desc: "Compléments alimentaires et conseils nutritionnels",
   },
