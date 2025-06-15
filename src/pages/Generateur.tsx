@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { MemofichePreview } from "@/components/MemofichePreview";
 import { Input } from "@/components/ui/input";
@@ -110,12 +109,15 @@ export default function Generateur() {
       );
       const data = await resp.json();
 
+      // Ajout d'un log détaillé pour debug
+      console.log("[DEBUG Gemini response]", data);
+
       if (!resp.ok || !data.memofiche) {
         setError(
           data?.error ||
             "Erreur : la génération IA n’a pas abouti. Merci de réessayer plus tard."
         );
-        setRawError(data?.raw || null);
+        setRawError(data?.raw || JSON.stringify(data, null, 2) || "Aucun détail transmis.");
         return;
       }
 
@@ -126,7 +128,7 @@ export default function Generateur() {
           ? err
           : err?.message || "Erreur inconnue lors de la génération IA."
       );
-      setRawError(null);
+      setRawError(err?.stack || null);
     } finally {
       setLoading(false);
     }
@@ -216,6 +218,16 @@ export default function Generateur() {
                     </div>
                   )}
                   <ErrorWithDetails error={error} rawError={rawError} />
+                  {/* Affichage direct du rawError à l'écran, même si vide */}
+                  {rawError && (
+                    <div className="mt-2 text-xs text-orange-800 bg-orange-50 border rounded p-2 font-mono whitespace-pre-wrap break-all">
+                      <strong>Erreur brute/Debug :</strong>
+                      <br />
+                      {typeof rawError === "string"
+                        ? rawError
+                        : JSON.stringify(rawError, null, 2)}
+                    </div>
+                  )}
                 </form>
               </Card>
               {memofiche && (
