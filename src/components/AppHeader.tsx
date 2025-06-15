@@ -1,6 +1,6 @@
 
 import { Link } from "react-router-dom";
-import { SidebarTrigger } from "@/components/ui/sidebar";
+// import { SidebarTrigger } from "@/components/ui/sidebar"; // Supprimé
 
 export default function AppHeader() {
   return (
@@ -14,7 +14,7 @@ export default function AppHeader() {
         </span>
       </Link>
       {/* Mobile: bouton sidebar si nécessaire */}
-      <SidebarTrigger className="md:hidden hover:bg-gray-100 rounded p-1" />
+      {/* <SidebarTrigger className="md:hidden hover:bg-gray-100 rounded p-1" /> */}
     </header>
   );
 }
