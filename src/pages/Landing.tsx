@@ -14,7 +14,7 @@ export default function Landing() {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  // Liste des niveaux
+  // Liste des niveaux simplifiée
   const niveaux = [
     { label: "Débutant", stars: 1 },
     { label: "Intermédiaire", stars: 2 },
@@ -55,7 +55,7 @@ export default function Landing() {
           </div>
         </div>
       </section>
-      {/* Niveaux de progression d'apprentissage : parcours monochrome simplifié */}
+      {/* Niveaux de progression d'apprentissage : version épurée et horizontale */}
       <section className="w-full max-w-3xl mx-auto px-4 pb-10 flex flex-col items-center">
         <div className="text-lg md:text-xl font-semibold text-gray-900 tracking-wide mb-7 text-center uppercase font-inter">
           Niveaux d&apos;apprentissage
@@ -63,37 +63,28 @@ export default function Landing() {
         <nav
           aria-label="Parcours niveaux"
           className={`
-            flex ${isMobile ? "flex-col items-center gap-6" : "flex-row items-center gap-0"}
-            w-full justify-center
-            animate-fade-in
-            mt-4
+            flex flex-row items-center justify-center gap-0 w-full animate-fade-in mt-2
           `}
         >
           {niveaux.map((step, i) => (
-            <div key={step.label} className="flex flex-col items-center">
-              {/* Icônes étoiles pleines, monochromes */}
-              <div className="flex items-center justify-center mb-2 gap-1">
+            <div key={step.label} className="flex flex-row items-center">
+              {/* Étoiles monochromes correspondant au niveau */}
+              <div className="flex items-center gap-1">
                 {[...Array(step.stars)].map((_, idx) => (
                   <Star
                     key={idx}
-                    className="w-6 h-6 md:w-7 md:h-7 text-gray-800 fill-gray-900"
-                    strokeWidth={1.5}
+                    className="w-6 h-6 md:w-7 md:h-7 text-gray-700 fill-gray-900"
+                    strokeWidth={1.1}
                   />
                 ))}
               </div>
-              {/* Label : en gras mais monochrome */}
-              <div className="text-sm md:text-base font-semibold text-gray-800 text-center">
+              {/* Label lisible sous les étoiles */}
+              <div className="ml-2 mr-4 text-base md:text-lg font-medium text-gray-800 min-w-[100px] text-left">
                 {step.label}
               </div>
-              {/* Flèche uniquement si ce n'est pas le dernier niveau */}
+              {/* Flèche vers la droite pour la progression (sauf le dernier) */}
               {i < niveaux.length - 1 && (
-                <div className="flex flex-col items-center justify-center">
-                  {isMobile ? (
-                    <ChevronDown className="w-5 h-5 text-gray-400 my-2" aria-label="étape suivante" />
-                  ) : (
-                    <ChevronRight className="w-5 h-5 text-gray-400 mx-6" aria-label="étape suivante" />
-                  )}
-                </div>
+                <ChevronRight className="w-6 h-6 mx-2 text-gray-400" aria-label="progresse vers" />
               )}
             </div>
           ))}
