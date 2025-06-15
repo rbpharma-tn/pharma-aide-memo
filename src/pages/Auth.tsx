@@ -90,43 +90,45 @@ export default function Auth() {
   }
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-cyan-50">
+    <main className="min-h-screen flex flex-col bg-gray-50">
       <AppHeader />
-      <div className="w-full max-w-md bg-white rounded shadow p-8 mt-8">
-        <h2 className="text-2xl font-bold mb-6 text-center">
-          {view === "login" ? "Connexion" : "Inscription"}
-        </h2>
-        <form className="space-y-4" onSubmit={handleAuth}>
-          <Input
-            type="email"
-            placeholder="Adresse email"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            required
-            autoFocus
-          />
-          <Input
-            type="password"
-            placeholder="Mot de passe"
-            value={password}
-            autoComplete="current-password"
-            onChange={e => setPassword(e.target.value)}
-            required
-          />
-          <Button type="submit" className="w-full" disabled={loading}>
-            {loading ? "Chargement..." : view === "login" ? "Se connecter" : "Créer mon compte"}
-          </Button>
-        </form>
-        <div className="text-center mt-4">
-          {view === "login" ? (
-            <button className="text-sm text-blue-600 hover:underline" onClick={() => setView("signup")}>
-              Pas encore de compte ? S’inscrire
-            </button>
-          ) : (
-            <button className="text-sm text-blue-600 hover:underline" onClick={() => setView("login")}>
-              Déjà inscrit ? Se connecter
-            </button>
-          )}
+      <div className="flex-1 flex items-center justify-center px-4">
+        <div className="w-full max-w-md bg-white rounded-xl shadow-lg py-12 px-8 flex flex-col items-center text-center">
+          <h2 className="mb-6 text-2xl md:text-3xl font-bold tracking-tight text-gray-900">
+            Connexion / Inscription
+          </h2>
+          <form className="space-y-4" onSubmit={handleAuth}>
+            <Input
+              type="email"
+              placeholder="Adresse email"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              required
+              autoFocus
+            />
+            <Input
+              type="password"
+              placeholder="Mot de passe"
+              value={password}
+              autoComplete="current-password"
+              onChange={e => setPassword(e.target.value)}
+              required
+            />
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? "Chargement..." : view === "login" ? "Se connecter" : "Créer mon compte"}
+            </Button>
+          </form>
+          <div className="text-center mt-4">
+            {view === "login" ? (
+              <button className="text-sm text-blue-600 hover:underline" onClick={() => setView("signup")}>
+                Pas encore de compte ? S’inscrire
+              </button>
+            ) : (
+              <button className="text-sm text-blue-600 hover:underline" onClick={() => setView("login")}>
+                Déjà inscrit ? Se connecter
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </main>
