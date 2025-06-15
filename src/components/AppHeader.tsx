@@ -1,20 +1,35 @@
 
-import { Link } from "react-router-dom";
-// import { SidebarTrigger } from "@/components/ui/sidebar"; // Supprimé
+import { Link, useLocation } from "react-router-dom";
+
+const navLinks = [
+  { to: "/", label: "Accueil" },
+  { to: "/generateur", label: "Mémofiches" },
+  { to: "/auth", label: "Connexion" },
+];
 
 export default function AppHeader() {
+  const { pathname } = useLocation();
   return (
-    <header className="flex items-center justify-between px-4 py-3 bg-white shadow-sm border-b">
-      <Link to="/" className="flex items-center gap-2 group">
-        <span className="inline-flex items-center justify-center w-9 h-9 rounded-full bg-gradient-to-br from-blue-600 to-cyan-400 shadow text-white text-2xl font-bold group-hover:scale-105 transition-transform">
-          💊
-        </span>
-        <span className="ml-2 text-3xl font-playfair font-bold text-gray-800 tracking-tight leading-tight group-hover:text-blue-700 transition-colors">
-          PharmIA
-        </span>
+    <header className="w-full bg-white border-b flex items-center justify-between px-6 py-4 font-inter">
+      <Link to="/" className="text-xl font-bold text-gray-900 tracking-tight">
+        PharmIA
       </Link>
-      {/* Mobile: bouton sidebar si nécessaire */}
-      {/* <SidebarTrigger className="md:hidden hover:bg-gray-100 rounded p-1" /> */}
+      <nav className="flex gap-8">
+        {navLinks.map((link) => (
+          <Link
+            key={link.to}
+            to={link.to}
+            className={
+              "text-base transition-colors hover:text-black font-medium" +
+              (pathname === link.to
+                ? " text-gray-900 font-bold"
+                : " text-gray-500")
+            }
+          >
+            {link.label}
+          </Link>
+        ))}
+      </nav>
     </header>
   );
 }

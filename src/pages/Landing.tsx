@@ -1,28 +1,22 @@
-
 import { Link } from "react-router-dom";
 import AppHeader from "@/components/AppHeader";
 import ThemeCarousel from "@/components/ThemeCarousel";
 
 export default function Landing() {
   return (
-    <main className="min-h-screen bg-gray-50 flex flex-col font-inter">  {/* Font Inter */}
+    <main className="min-h-screen bg-white flex flex-col font-inter">
       <AppHeader />
-      {/* HERO épuré */}
-      <section className="w-full max-w-3xl mx-auto flex flex-col items-center pt-14 pb-9 px-4">
-        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 text-center mb-5 leading-tight tracking-tight font-inter">
-          Les <span className="font-playfair text-gray-800">Mémofiches</span> du conseil pharmaceutique
+      <section className="flex flex-col items-center justify-center w-full py-16 px-4">
+        <h1 className="text-4xl md:text-6xl font-black text-gray-900 text-center mb-6 tracking-tight font-inter">
+          Mémofiches conseil à l&apos;officine
         </h1>
-        <p className="text-base md:text-lg text-gray-600 font-normal text-center max-w-2xl mb-10 font-inter">
-          Micro-apprentissage épuré et adaptatif, pour tous les personnels d&apos;officine. Cas pratiques, expertise concrète.
+        <p className="text-base md:text-xl font-medium text-gray-500 text-center max-w-2xl font-inter">
+          Micro-apprentissage adaptatif et personnalisé du personnel de la pharmacie à travers des cas comptoir 100% pratiques
         </p>
       </section>
-
-      {/* Carrousel + timeline */}
       <section className="w-full max-w-5xl mx-auto px-4 py-1">
         <ThemeCarousel />
       </section>
-
-      {/* Stats sobres */}
       <section className="w-full max-w-3xl mx-auto px-4 py-7 mt-1">
         <div className="flex flex-wrap gap-5 justify-center items-center mb-8">
           <div className="bg-white rounded-xl px-7 py-5 shadow-sm border border-gray-100 flex flex-col items-center min-w-[120px]">
@@ -42,7 +36,6 @@ export default function Landing() {
             <div className="text-xs text-gray-500 font-inter">Progression</div>
           </div>
         </div>
-        {/* CTA fidèle à la maquette */}
         <div className="bg-white rounded-2xl p-9 shadow text-center border border-gray-100 max-w-2xl mx-auto flex flex-col items-center">
           <div className="text-2xl font-bold mb-3 text-gray-900 font-inter">
             Commencer votre progression&nbsp;?
