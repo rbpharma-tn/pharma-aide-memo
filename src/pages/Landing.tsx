@@ -1,6 +1,6 @@
 
 import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Book, BarChart, Star, Crown } from "lucide-react";
 import AppHeader from "@/components/AppHeader";
 import ThemeCarousel from "@/components/ThemeCarousel";
 
@@ -40,41 +40,74 @@ export default function Landing() {
       </section>
       {/* Niveaux de progression d'apprentissage : titre + timeline améliorée */}
       <section className="w-full max-w-3xl mx-auto px-4 pb-10 flex flex-col items-center">
-        <div className="text-lg md:text-xl font-semibold text-gray-900 tracking-wide mb-5 text-center uppercase font-inter">
+        <div className="text-lg md:text-xl font-semibold text-gray-900 tracking-wide mb-7 text-center uppercase font-inter">
           Niveaux d&apos;apprentissage
         </div>
-        {/* Timeline visuelle et animée */}
-        <div className="w-full max-w-2xl flex flex-col items-center animate-fade-in">
+        <div className="w-full max-w-2xl flex flex-col items-center animate-fade-in mt-4">
           <ol className="flex items-center justify-between w-full gap-0 md:gap-4 px-2 relative">
             {[
-              { label: "Débutant", color: "from-blue-400 to-blue-700", dot: "bg-blue-700", text: "text-blue-700" },
-              { label: "Intermédiaire", color: "from-green-400 to-green-600", dot: "bg-green-600", text: "text-green-700" },
-              { label: "Avancé", color: "from-yellow-300 to-yellow-500", dot: "bg-yellow-400", text: "text-yellow-600" },
-              { label: "Expert", color: "from-fuchsia-500 to-fuchsia-800", dot: "bg-fuchsia-700", text: "text-fuchsia-800" },
+              {
+                number: 1,
+                label: "Débutant",
+                Icon: Book,
+                color: "text-blue-600",
+                bar: "bg-blue-100",
+                border: "border-blue-200"
+              },
+              {
+                number: 2,
+                label: "Intermédiaire",
+                Icon: BarChart,
+                color: "text-green-600",
+                bar: "bg-green-100",
+                border: "border-green-200"
+              },
+              {
+                number: 3,
+                label: "Avancé",
+                Icon: Star,
+                color: "text-yellow-500",
+                bar: "bg-yellow-100",
+                border: "border-yellow-200"
+              },
+              {
+                number: 4,
+                label: "Expert",
+                Icon: Crown,
+                color: "text-fuchsia-700",
+                bar: "bg-fuchsia-100",
+                border: "border-fuchsia-200"
+              }
             ].map((step, i, arr) => (
-              <li key={step.label} className="flex-1 flex flex-col items-center relative group">
+              <li key={step.label} className="flex-1 flex flex-col items-center relative group z-0">
                 {/* Connecteur gauche */}
                 {i > 0 && (
-                  <div className={`absolute left-0 top-1/2 -translate-y-1/2 z-0 w-1/2 h-2 rounded-l-full
-                    bg-gradient-to-l ${step.color}
-                    ${i === arr.length-1 ? "" : ""}
-                  `} />
+                  <div
+                    className={`absolute left-0 top-1/2 -translate-y-1/2 z-0 w-1/2 h-2 rounded-l-full
+                      ${arr[i].bar}
+                    `}
+                  />
                 )}
-                {/* Dot animée */}
-                <div className={`z-10 w-10 h-10 rounded-full border-4 shadow-md flex items-center justify-center
-                  ${step.dot} border-white group-hover:scale-110 transition-transform duration-200 animate-scale-in
-                `}>
-                  <span className="text-base font-bold text-white drop-shadow-sm">{i + 1}</span>
+                {/* Icône + Numéro dans un cercle */}
+                <div
+                  className={`z-10 w-14 h-14 md:w-16 md:h-16 rounded-full border-2 ${step.border} bg-white shadow transition duration-200 flex flex-col items-center justify-center group-hover:scale-110 animate-scale-in`}
+                >
+                  <span className={`block text-xs text-gray-400 font-extrabold mb-1`}>{step.number}.</span>
+                  <step.Icon className={`w-7 h-7 md:w-8 md:h-8 ${step.color} drop-shadow`} />
                 </div>
                 {/* Label */}
-                <div className={`mt-2 text-xs md:text-sm font-semibold text-center ${step.text} transition-all group-hover:scale-105`}>
+                <div
+                  className={`mt-3 text-xs md:text-sm font-semibold text-center ${step.color} transition-all group-hover:scale-105`}
+                >
                   {step.label}
                 </div>
                 {/* Connecteur droit */}
                 {i < arr.length - 1 && (
-                  <div className={`absolute right-0 top-1/2 -translate-y-1/2 z-0 w-1/2 h-2 rounded-r-full
-                    bg-gradient-to-r ${step.color}
-                  `} />
+                  <div
+                    className={`absolute right-0 top-1/2 -translate-y-1/2 z-0 w-1/2 h-2 rounded-r-full
+                      ${arr[i].bar}
+                    `}
+                  />
                 )}
               </li>
             ))}
@@ -111,3 +144,4 @@ export default function Landing() {
     </main>
   );
 }
+
