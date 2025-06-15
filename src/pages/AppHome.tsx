@@ -26,7 +26,7 @@ type Memofiche = {
 
 export default function AppHome() {
   const navigate = useNavigate();
-  const [memofiches, setMemofiches] = useState<Memofiche[]>([]);
+  const [memofiches, setMemofiches] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchParams] = useSearchParams();
   const cat = searchParams.get("cat") || "all";
@@ -84,9 +84,13 @@ export default function AppHome() {
     <div className="min-h-screen flex flex-col bg-gray-50">
       {/* HEADER global toujours visible */}
       <AppHeader />
+      {/* Barre latérale descendue sous le header */}
       <SidebarProvider>
         <div className="flex flex-1 min-h-0 w-full">
-          <AppSidebar />
+          {/* Décaler la sidebar vers le bas avec un margin ou padding */}
+          <div className="mt-2 md:mt-4">
+            <AppSidebar />
+          </div>
           <SidebarInset className="flex-1 flex justify-center items-center py-8 px-2">
             <main className="w-full max-w-4xl bg-white rounded-xl shadow-lg py-10 px-6 md:px-12">
               <div className="flex items-center justify-between mb-6 flex-wrap gap-2">
