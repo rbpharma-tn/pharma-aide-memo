@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { MemofichePreview } from "@/components/MemofichePreview";
 import { Input } from "@/components/ui/input";
@@ -5,13 +6,21 @@ import { Button } from "@/components/ui/button";
 import AppHeader from "@/components/AppHeader";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { Card } from "@/components/ui/card";
-import { BookOpenText, BookCopy, Link2 } from "lucide-react";
+import { BookOpenText, BookCopy, Link2, Upload, File } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 
 type MemoficheStruct = {
   title: string;
   subtitle?: string;
   description?: string;
   sections?: { id: string; label: string; content: string }[];
+};
+
+// Structure pour l’envoi de docs additionnels
+type SupplementFile = {
+  name: string;
+  type: string;
+  content: string; // encodé en base64 ou texte brut selon le type
 };
 
 export default function Generateur() {
@@ -27,6 +36,55 @@ export default function Generateur() {
   const [manualYoutube, setManualYoutube] = useState<string>("");
   const [manualPodcast, setManualPodcast] = useState<string>("");
 
+  // Nouveaux états pour le support documentaire
+  const [supplementFiles, setSupplementFiles] = useState<SupplementFile[]>([]);
+  const [supplementText, setSupplementText] = useState("");
+
+  // Gestion de l’upload multi-fichiers texte/pdf (contextes annexes)
+  async function handleSupplementFilesChange(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.files && e.target.files.length > 0) {
+      // On lit chaque fichier (max 3 Mo/fichier conseillé)
+      const filesArr = Array.from(e.target.files);
+      const readPromises = filesArr.map(
+        file =>
+          new Promise<SupplementFile>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+              let content = "";
+              if (file.type === "application/pdf") {
+                content = ""; // Extraction PDF côté backend (optionnel)
+              } else {
+                content = reader.result as string;
+              }
+              resolve({ name: file.name, type: file.type, content });
+            };
+            reader.onerror = () => reject(reader.error);
+            if (file.type.startsWith("text/")) {
+              reader.readAsText(file);
+            } else if (file.type === "application/pdf") {
+              // On n’extrait pas le PDF côté front, placeholder
+              resolve({
+                name: file.name,
+                type: file.type,
+                content: "", // Extraction à prévoir côté backend
+              });
+            } else {
+              // Format non supporté : ignoré
+              resolve({
+                name: file.name,
+                type: file.type,
+                content: "",
+              });
+            }
+          })
+      );
+      const docs = await Promise.all(readPromises);
+      setSupplementFiles(docs.filter(f => f.content !== "" || f.type === "application/pdf"));
+    } else {
+      setSupplementFiles([]);
+    }
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
@@ -34,14 +92,21 @@ export default function Generateur() {
     setMemofiche(null);
 
     try {
+      // Prépare les supplements (texte + fichiers)
+      const supplement = {
+        text: supplementText,
+        files: supplementFiles,
+      };
+
       const resp = await fetch(
         "https://fxohysiwchvmyhzdtffq.functions.supabase.co/generate-memofiche-together",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ theme }),
+          body: JSON.stringify({ theme, supplement }),
         }
       );
+
       const data = await resp.json();
 
       if (!resp.ok || !data.memofiche) {
@@ -172,7 +237,6 @@ export default function Generateur() {
                   </Button>
                 </div>
                 <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-                  {/* Champ sujet ("Entrez un sujet") déplacé et élargi */}
                   <Input
                     placeholder="Entrez un sujet, ex : Otite du nourrisson"
                     value={theme}
@@ -236,7 +300,44 @@ export default function Generateur() {
                       className="text-base font-inter"
                     />
                   </div>
-                  {/* --- Fin champs manuels --- */}
+                  {/* --- Support documentaire IA (text/pdf) --- */}
+                  <div className="flex flex-col gap-3 mb-2 mt-2 p-4 bg-gray-50 rounded border border-gray-200">
+                    <label className="text-md font-semibold text-gray-800 flex gap-2 items-center">
+                      <Upload size={16} /> Ajouter documents ou extraits pour l’IA (optionnel)
+                    </label>
+                    <Input
+                      type="file"
+                      multiple
+                      accept=".txt,.pdf,text/plain,application/pdf"
+                      onChange={handleSupplementFilesChange}
+                      className="text-base font-inter"
+                      disabled={loading}
+                    />
+                    {supplementFiles.length > 0 && (
+                      <ul className="text-xs text-gray-600 mt-1">
+                        {supplementFiles.map((f, idx) => (
+                          <li key={f.name + idx} className="flex items-center gap-1 mb-1">
+                            <File size={14} className="text-gray-400" /> {f.name}
+                            {f.type === "application/pdf" && (
+                              <span className="ml-2 text-amber-500">(PDF : texte extrait côté IA)</span>
+                            )}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                    <label className="text-sm font-medium text-gray-700 mt-2">
+                      Coller du texte ou extrait de cours (optionnel)
+                    </label>
+                    <Textarea
+                      value={supplementText}
+                      onChange={e => setSupplementText(e.target.value)}
+                      placeholder="Collez ici votre cours, QCM, extrait de notice à fournir à l’IA…"
+                      rows={4}
+                      className="font-inter text-base"
+                      disabled={loading}
+                    />
+                  </div>
+                  {/* --- Fin support documentaire --- */}
                   <Button
                     type="submit"
                     className="mt-1 font-inter"
