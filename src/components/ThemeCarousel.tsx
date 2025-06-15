@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import {
   ChevronLeft,
   ChevronRight,
@@ -7,10 +7,10 @@ import {
   Pill,
   Leaf,
   Sparkles,
-  HeartPulse, // Remplacement vétérinaire
   FlaskConical,
   MessageCircle,
-  BarChartHorizontal, // Représente le "lecteur glycémie" (glucomètre)
+  Dog,           // Ajout : icône domaine vétérinaire
+  Syringe,       // Ajout : icône dispositif (glucomètre)
 } from "lucide-react";
 
 // On met à jour toutes les couleurs pour un rendu monochrome + update dispositifs
@@ -55,7 +55,7 @@ const themes = [
     id: "pharmacie-veterinaire",
     title: "Pharmacie vétérinaire",
     description: "Santé animale et médicaments vétérinaires",
-    icon: HeartPulse, // Icône vétérinaire plus adaptée
+    icon: Dog, // Icône vétérinaire adaptée
     color: "text-gray-800",
     bgColor: "bg-gray-50",
     borderColor: "border-gray-200",
@@ -64,7 +64,7 @@ const themes = [
     id: "dispositifs",
     title: "Dispositifs",
     description: "Dispositifs médicaux et matériel de santé",
-    icon: BarChartHorizontal, // Évoque le lecteur de glycémie (aspect mesure)
+    icon: Syringe, // Icône suggérant un dispositif médical (glucomètre)
     color: "text-gray-800",
     bgColor: "bg-gray-50",
     borderColor: "border-gray-200",
