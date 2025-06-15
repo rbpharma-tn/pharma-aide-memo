@@ -13,9 +13,18 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 
+// Type for memofiches based on your supabase db
+type Memofiche = {
+  id: string;
+  title: string;
+  subtitle?: string;
+  description?: string;
+  // Add any other fields you need
+};
+
 export default function AppHome() {
   const navigate = useNavigate();
-  const [memofiches, setMemofiches] = useState<any[]>([]);
+  const [memofiches, setMemofiches] = useState<Memofiche[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchParams] = useSearchParams();
   const cat = searchParams.get("cat") || "all";
@@ -27,19 +36,26 @@ export default function AppHome() {
         navigate("/auth");
       }
     });
+
     async function fetchMemofiches() {
       setLoading(true);
-      let queryBuilder = supabase.from("memofiches").select("*").order("created_at", { ascending: false });
-      let query = queryBuilder;
-      if (cat !== "all") {
-        query = queryBuilder.eq("category", cat);
+      let { data, error } = await supabase
+        .from("memofiches")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      // If filtering by category
+      if (cat !== "all" && data) {
+        data = data.filter((item) => item.category === cat);
       }
-      const { data, error } = await query;
+
       setMemofiches(data ?? []);
       setLoading(false);
     }
     fetchMemofiches();
-    return () => { ignore = true; };
+    return () => {
+      ignore = true;
+    };
   }, [navigate, cat]);
 
   return (
@@ -54,7 +70,9 @@ export default function AppHome() {
                 Mes mémofiches
               </h1>
               {loading ? (
-                <div className="text-center text-gray-400 pt-12 animate-pulse">Chargement…</div>
+                <div className="text-center text-gray-400 pt-12 animate-pulse">
+                  Chargement…
+                </div>
               ) : (
                 <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7">
                   {memofiches.length === 0 ? (
@@ -68,7 +86,9 @@ export default function AppHome() {
                         className="bg-white border border-gray-100 shadow hover:shadow-lg group transition-all rounded-xl"
                       >
                         <CardHeader className="pb-3">
-                          <CardTitle className="text-black text-lg truncate font-semibold">{m.title}</CardTitle>
+                          <CardTitle className="text-black text-lg truncate font-semibold">
+                            {m.title}
+                          </CardTitle>
                           {m.subtitle && (
                             <CardDescription className="text-gray-500 text-sm">
                               {m.subtitle}
