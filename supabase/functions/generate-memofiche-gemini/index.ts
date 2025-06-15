@@ -1,10 +1,10 @@
-
 // deno-lint-ignore-file no-explicit-any
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 // Récupération de la clé API Gemini depuis les secrets Supabase
 const geminiApiKey = Deno.env.get("GEMINI_API_KEY");
+console.log("[DEBUG Gemini API key] GEMINI_API_KEY starts with:", geminiApiKey?.substring(0, 5) ?? "undefined");
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
