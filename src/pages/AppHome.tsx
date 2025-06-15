@@ -84,11 +84,15 @@ export default function AppHome() {
     <div className="min-h-screen flex flex-col bg-gray-50">
       {/* HEADER global toujours visible */}
       <AppHeader />
-      {/* Barre latérale descendue sous le header */}
+      {/* Arrange the sidebar to start below the header with a gap for a more balanced design */}
       <SidebarProvider>
         <div className="flex flex-1 min-h-0 w-full">
-          {/* Décaler la sidebar vers le bas avec un margin ou padding */}
-          <div className="mt-2 md:mt-4">
+          {/* 
+            Sidebar starts below the header.
+            To do this, make sure it uses padding or margin-top at least equal to header height. 
+            We'll adjust it so it's not flush with the top.
+          */}
+          <div className="pt-4 md:pt-6">
             <AppSidebar />
           </div>
           <SidebarInset className="flex-1 flex justify-center items-center py-8 px-2">

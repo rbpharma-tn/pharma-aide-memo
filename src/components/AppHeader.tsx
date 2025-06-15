@@ -1,4 +1,3 @@
-
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -39,10 +38,14 @@ export default function AppHeader() {
   ];
 
   return (
-    <header className="w-full bg-white border-b flex items-center justify-between px-6 py-4 font-inter">
-      <Link to="/" className="text-xl font-bold text-gray-900 tracking-tight">
-        PharmIA
-      </Link>
+    <header className="w-full flex items-center px-4 py-3 bg-white shadow-sm z-30">
+      {/* PharmIA logo at top-left */}
+      <div className="flex items-center gap-2">
+        {/* Replace with SVG/logo image if available, else text */}
+        <span className="text-2xl font-playfair font-bold text-blue-700 tracking-tight select-none">
+          PharmIA
+        </span>
+      </div>
       <nav className="flex gap-8">
         {navLinks.map((link) => (
           <Link
