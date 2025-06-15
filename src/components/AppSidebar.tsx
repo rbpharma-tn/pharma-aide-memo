@@ -12,7 +12,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { LayoutList } from "lucide-react";
-import { NavLink, useLocation, useSearchParams } from "react-router-dom";
+import { NavLink, useSearchParams } from "react-router-dom";
 
 const categories = [
   { label: "Tout", value: "all" },
@@ -25,23 +25,23 @@ export default function AppSidebar() {
   const { state } = useSidebar();
   const [searchParams] = useSearchParams();
   const cat = searchParams.get("cat") || "all";
-  const location = useLocation();
   const isCategoryActive = (key: string) => cat === key;
 
   return (
     <Sidebar
       className={
-        "min-h-screen bg-black text-white border-r border-[#222] " +
-        (state === "collapsed" ? "w-16" : "w-56")
+        `${state === "collapsed" ? "w-16" : "w-56"} min-h-screen border-r
+        bg-gradient-to-b from-[#f7f7fa] to-[#ececf2] text-gray-900`
       }
       collapsible="icon"
     >
       {/* Collapse trigger visible en mini */}
-      <SidebarTrigger className="m-3 self-end" />
+      <SidebarTrigger className="m-3 self-end md:hidden" />
 
       <SidebarContent>
-        <SidebarGroup open>
-          <SidebarGroupLabel className="text-xs uppercase text-gray-400 px-3 pb-1 tracking-wider">
+        {/* Catégories */}
+        <SidebarGroup>
+          <SidebarGroupLabel className="text-xs uppercase text-gray-400 px-3 pb-1 tracking-wider mt-1 mb-2">
             Catégories
           </SidebarGroupLabel>
           <SidebarGroupContent>
@@ -52,10 +52,10 @@ export default function AppSidebar() {
                     <NavLink
                       to={`/app?cat=${catItem.value}`}
                       className={
-                        "flex items-center gap-2 rounded px-2 py-2" +
+                        "flex items-center gap-2 rounded px-2 py-2 transition-colors" +
                         (isCategoryActive(catItem.value)
-                          ? " bg-neutral-900 text-white font-medium"
-                          : " text-gray-300 hover:bg-neutral-800 hover:text-white")
+                          ? " bg-white text-black font-semibold shadow-sm"
+                          : " text-gray-500 hover:bg-gray-200")
                       }
                     >
                       <LayoutList className="h-5 w-5" />

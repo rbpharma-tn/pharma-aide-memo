@@ -17,7 +17,7 @@ export default function Auth() {
   // Listen to auth, check roles & redirect if logged in
   useEffect(() => {
     // reload on auth change
-    const { subscription } = supabase.auth.onAuthStateChange((event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (session?.user) {
         // Check role and redirect accordingly
         const { user } = session;
