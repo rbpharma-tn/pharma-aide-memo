@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/sidebar";
 import { LayoutList, Stethoscope, Pill, Leaf, Sparkles, Dog, Syringe, FlaskConical, MessageCircle } from "lucide-react";
 import { NavLink, useSearchParams } from "react-router-dom";
+import React from "react";
 
 // Liste des domaines d'expertises alignée au carrousel
 const domaines = [
@@ -45,11 +46,18 @@ export default function AppSidebar() {
     >
       <SidebarTrigger className="m-3 self-end md:hidden" />
       <SidebarContent>
-        {/* Compétences label bien séparé au-dessus des liens */}
+        {/* Logo + COMPÉTENCES en haut */}
+        <div className="p-4 flex flex-col items-center mb-3">
+          <span className="text-3xl font-playfair font-bold text-black tracking-tight select-none">
+            PharmIA
+          </span>
+          <span className="mt-1 text-xs uppercase text-gray-500 tracking-wider">
+            COMPÉTENCES
+          </span>
+        </div>
+        {/* Menu descendu d’un niveau */}
         <SidebarGroup>
-          <SidebarGroupLabel className="text-xs uppercase text-gray-500 px-4 pb-1 tracking-wider mt-1 mb-3">
-            Compétences
-          </SidebarGroupLabel>
+          {/* Plus de label ici */}
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem key="all">
