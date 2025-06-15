@@ -1,3 +1,4 @@
+
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -7,7 +8,6 @@ export default function AppHeader() {
   const [userRole, setUserRole] = useState<string | null>(null);
 
   useEffect(() => {
-    // Récupérer la session active puis le rôle associé
     supabase.auth.getSession().then(async ({ data: sessionData }) => {
       const userId = sessionData.session?.user?.id;
       if (!userId) {
@@ -19,15 +19,13 @@ export default function AppHeader() {
         .select("role")
         .eq("user_id", userId);
       if (!error && data && data.length > 0) {
-        const role = data[0].role;
-        setUserRole(role);
+        setUserRole(data[0].role);
       } else {
-        setUserRole(null); // Standard user
+        setUserRole(null);
       }
     });
   }, []);
 
-  // Définir dynamiquement les liens du menu
   const navLinks = [
     { to: "/", label: "Accueil" },
     {
@@ -38,24 +36,24 @@ export default function AppHeader() {
   ];
 
   return (
-    <header className="w-full flex items-center px-4 py-3 bg-white shadow-sm z-30">
-      {/* PharmIA logo at top-left */}
+    <header className="w-full flex items-center justify-between px-4 py-3 bg-white shadow-sm z-30">
+      {/* Logo PharmIA à gauche, police Playfair, noir */}
       <div className="flex items-center gap-2">
-        {/* Replace with SVG/logo image if available, else text */}
-        <span className="text-2xl font-playfair font-bold text-blue-700 tracking-tight select-none">
+        <span className="text-3xl font-playfair font-bold text-black tracking-tight select-none">
           PharmIA
         </span>
       </div>
+      {/* Menu à droite, liens underline on hover */}
       <nav className="flex gap-8">
         {navLinks.map((link) => (
           <Link
             key={link.to + link.label}
             to={link.to}
             className={
-              "text-base transition-colors hover:text-black font-medium" +
+              "text-base transition-colors font-medium " +
               (pathname === link.to
-                ? " text-gray-900 font-bold"
-                : " text-gray-500")
+                ? "text-gray-900 font-bold underline underline-offset-4"
+                : "text-gray-500 hover:text-black hover:underline hover:underline-offset-4")
             }
           >
             {link.label}

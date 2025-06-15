@@ -35,30 +35,32 @@ export default function AppSidebar() {
   return (
     <Sidebar
       className={
-        `${state === "collapsed" ? "w-16" : "w-56"} min-h-screen border-r
-        bg-gradient-to-b from-[#f7f7fa] to-[#ececf2] text-gray-900`
+        (state === "collapsed"
+          ? "w-16"
+          : "w-56"
+        ) +
+        " min-h-screen border-r bg-gradient-to-b from-[#f6f6f8] to-[#e5e5ea] text-gray-900"
       }
       collapsible="icon"
     >
       <SidebarTrigger className="m-3 self-end md:hidden" />
       <SidebarContent>
-        {/* Changement de label */}
+        {/* Compétences label bien séparé au-dessus des liens */}
         <SidebarGroup>
-          <SidebarGroupLabel className="text-xs uppercase text-gray-400 px-3 pb-1 tracking-wider mt-1 mb-2">
+          <SidebarGroupLabel className="text-xs uppercase text-gray-500 px-4 pb-1 tracking-wider mt-1 mb-3">
             Compétences
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {/* Domaine = bouton "voir tout" */}
               <SidebarMenuItem key="all">
                 <SidebarMenuButton asChild isActive={domaine === "all"}>
                   <NavLink
                     to="/app?cat=all"
                     className={
-                      "flex items-center gap-2 rounded px-2 py-2 transition-colors" +
+                      "flex items-center gap-2 rounded px-2 py-2 transition-colors font-medium " +
                       (domaine === "all"
-                        ? " bg-white text-black font-semibold shadow-sm"
-                        : " text-gray-500 hover:bg-gray-200")
+                        ? "bg-white text-black shadow-sm underline underline-offset-4"
+                        : "text-gray-500 hover:bg-gray-100 hover:underline hover:underline-offset-4")
                     }
                   >
                     <LayoutList className="h-5 w-5" />
@@ -66,17 +68,16 @@ export default function AppSidebar() {
                   </NavLink>
                 </SidebarMenuButton>
               </SidebarMenuItem>
-              {/* Boucle sur les domaines */}
               {domaines.map((dom) => (
                 <SidebarMenuItem key={dom.value}>
                   <SidebarMenuButton asChild isActive={isDomaineActive(dom.value)}>
                     <NavLink
                       to={`/app?cat=${dom.value}`}
                       className={
-                        "flex items-center gap-2 rounded px-2 py-2 transition-colors" +
+                        "flex items-center gap-2 rounded px-2 py-2 transition-colors font-medium " +
                         (isDomaineActive(dom.value)
-                          ? " bg-white text-black font-semibold shadow-sm"
-                          : " text-gray-500 hover:bg-gray-200")
+                          ? "bg-white text-black shadow-sm underline underline-offset-4"
+                          : "text-gray-500 hover:bg-gray-100 hover:underline hover:underline-offset-4")
                       }
                     >
                       {dom.icon}
@@ -90,10 +91,10 @@ export default function AppSidebar() {
                   <NavLink
                     to="/generateur"
                     className={
-                      "flex items-center gap-2 rounded px-2 py-2 transition-colors" +
+                      "flex items-center gap-2 rounded px-2 py-2 transition-colors font-medium " +
                       (window.location.pathname === "/generateur"
-                        ? " bg-blue-100 text-blue-700 font-bold shadow"
-                        : " text-gray-500 hover:bg-gray-200")
+                        ? "bg-blue-100 text-blue-700 font-bold shadow underline underline-offset-4"
+                        : "text-gray-500 hover:bg-gray-100 hover:underline hover:underline-offset-4")
                     }
                   >
                     <span>✨</span>
@@ -108,4 +109,3 @@ export default function AppSidebar() {
     </Sidebar>
   );
 }
-
