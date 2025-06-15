@@ -3,7 +3,7 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
-const apiKey = Deno.env.get("TOGETHER_API_KEY");
+const apiKey = Deno.env.get("DEEPSEEK_API_KEY");
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -26,7 +26,7 @@ serve(async (req: Request) => {
       });
     }
 
-    // Prompt structuré : la réponse du modèle doit être un JSON structurés pour faciliter le rendu.
+    // Prompt structuré : la réponse du modèle doit être un JSON structuré pour faciliter le rendu.
     const systemPrompt = `Tu es un assistant expert pour aider des étudiants en pharmacie. Génère une mémofiche structurée sous format JSON avec les sections suivantes :
 {
   "title": "Titre de la mémofiche (ex : ${theme})",
@@ -47,32 +47,33 @@ serve(async (req: Request) => {
 - Utilise des phrases concises et précises adaptées à un étudiant.
 - Réponds uniquement par un objet JSON, sans explications autour.`;
 
-    const togetherResponse = await fetch("https://api.together.xyz/v1/chat/completions", {
+    // Appel DeepSeek Chat Completions
+    const deepseekResponse = await fetch("https://api.deepseek.com/v1/chat/completions", {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${apiKey}`,
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model: "meta-llama-3-70b-instruct",
+        model: "deepseek-chat",
         messages: [
           { role: "system", content: systemPrompt },
-          { role: "user", content: `Sujet : ${theme}` }
+          { role: "user", content: `Sujet : ${theme}` }
         ],
         max_tokens: 1100,
-        temperature: 0.3,
+        temperature: 0.3
       }),
     });
 
-    const togetherData = await togetherResponse.json();
+    const deepseekData = await deepseekResponse.json();
 
     // Extraction du résultat
     const rawContent =
-      togetherData.choices?.[0]?.message?.content ||
-      togetherData.choices?.[0]?.data?.[0]?.text ||
+      deepseekData.choices?.[0]?.message?.content ||
+      deepseekData.choices?.[0]?.data?.[0]?.text ||
       "";
 
-    // Vérifier : JSON direct ou stringifiable ?
+    // Vérifier : JSON direct ou stringifiable ?
     let parsed: any;
     try {
       parsed = typeof rawContent === "object"
