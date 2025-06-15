@@ -17,7 +17,8 @@ serve(async (req: Request) => {
   }
 
   try {
-    const { theme } = await req.json();
+    // On récupère aussi le "supplement.text" (texte collé)
+    const { theme, supplement } = await req.json();
 
     if (!theme || typeof theme !== "string") {
       return new Response(JSON.stringify({ error: "Missing or invalid theme" }), {
@@ -26,8 +27,13 @@ serve(async (req: Request) => {
       });
     }
 
-    // Prompt structuré : la réponse du modèle doit être un JSON structuré pour faciliter le rendu.
-    const systemPrompt = `Tu es un assistant expert pour aider des étudiants en pharmacie. Génère une mémofiche structurée sous format JSON avec les sections suivantes :
+    // On extrait le texte collé fourni, s’il y en a
+    const pastedContext: string = (supplement && typeof supplement.text === "string" && supplement.text.trim().length > 0)
+      ? supplement.text.trim()
+      : "";
+
+    // Prompt structuré avec contextualisation si texte collé fourni
+    let systemPrompt = `Tu es un assistant expert pour aider des étudiants en pharmacie. Génère une mémofiche structurée sous format JSON avec les sections suivantes :
 {
   "title": "Titre de la mémofiche (ex : ${theme})",
   "subtitle": "Sous-titre concis",
@@ -46,6 +52,16 @@ serve(async (req: Request) => {
 }
 - Utilise des phrases concises et précises adaptées à un étudiant.
 - Réponds uniquement par un objet JSON, sans explications autour.`;
+
+    // Ajoute le contexte si du texte collé est fourni
+    if (pastedContext) {
+      systemPrompt = `CONTEXTE fourni par l'utilisateur : 
+""" 
+${pastedContext}
+"""
+
+${systemPrompt}`;
+    }
 
     // Appel DeepSeek Chat Completions
     const deepseekResponse = await fetch("https://api.deepseek.com/v1/chat/completions", {
