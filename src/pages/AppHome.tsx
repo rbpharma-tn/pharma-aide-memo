@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -14,6 +13,7 @@ import {
 import AppHeader from "@/components/AppHeader";
 import { MemofichePreview } from "@/components/MemofichePreview";
 import { Button } from "@/components/ui/button";
+import { MemoficheAIGenerator } from "@/components/MemoficheAIGenerator";
 
 // Type for memofiches based on your supabase db
 type Memofiche = {
@@ -31,6 +31,7 @@ export default function AppHome() {
   const [searchParams] = useSearchParams();
   const cat = searchParams.get("cat") || "all";
   const [showPreview, setShowPreview] = useState(false);
+  const [showAIGen, setShowAIGen] = useState(false);
 
   useEffect(() => {
     let ignore = false;
@@ -70,14 +71,29 @@ export default function AppHome() {
           <AppSidebar />
           <SidebarInset className="flex-1 flex justify-center items-center py-8 px-2">
             <main className="w-full max-w-4xl bg-white rounded-xl shadow-lg py-10 px-6 md:px-12">
-              <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center justify-between mb-6 flex-wrap gap-2">
                 <h1 className="text-2xl font-playfair font-bold text-gray-800 flex items-center gap-2">
                   Mes mémofiches
                 </h1>
-                <Button variant="outline" size="sm" onClick={() => setShowPreview((v) => !v)}>
-                  {showPreview ? "Masquer l’aperçu" : "Voir un exemple"}
-                </Button>
+                <div className="flex gap-3">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    className="border border-blue-600 text-blue-700 bg-blue-50 hover:bg-blue-100"
+                    onClick={() => setShowAIGen(true)}
+                  >
+                    + Générer une mémofiche IA
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setShowPreview((v) => !v)}
+                  >
+                    {showPreview ? "Masquer l’aperçu" : "Voir un exemple"}
+                  </Button>
+                </div>
               </div>
+              <MemoficheAIGenerator open={showAIGen} onClose={() => setShowAIGen(false)} />
               {showPreview && <MemofichePreview onClose={() => setShowPreview(false)} />}
               {loading ? (
                 <div className="text-center text-gray-400 pt-12 animate-pulse">
