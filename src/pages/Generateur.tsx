@@ -76,7 +76,7 @@ export default function Generateur() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50 font-inter">
+    <div className="min-h-screen flex flex-col bg-gray-50 font-sora">
       <AppHeader />
       <SidebarProvider>
         <div className="flex flex-1 min-h-0 w-full">
