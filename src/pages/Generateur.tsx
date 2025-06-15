@@ -21,6 +21,13 @@ export default function Generateur() {
   const [memofiche, setMemofiche] = useState<MemoficheStruct | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // Nouveaux états pour les champs d’intro manuelle
+  const [manualPhoto, setManualPhoto] = useState<File | null>(null);
+  const [manualPhotoName, setManualPhotoName] = useState<string>("");
+  const [manualTitle, setManualTitle] = useState<string>("");
+  const [manualYoutube, setManualYoutube] = useState<string>("");
+  const [manualPodcast, setManualPodcast] = useState<string>("");
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
@@ -56,6 +63,16 @@ export default function Generateur() {
       );
     } finally {
       setLoading(false);
+    }
+  }
+
+  function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.files && e.target.files.length > 0) {
+      setManualPhoto(e.target.files[0]);
+      setManualPhotoName(e.target.files[0].name);
+    } else {
+      setManualPhoto(null);
+      setManualPhotoName("");
     }
   }
 
@@ -156,6 +173,61 @@ export default function Generateur() {
                   </Button>
                 </div>
                 <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+                  {/* --- Champs Manuels avant la génération IA --- */}
+                  <div className="flex flex-col gap-3 mb-2">
+                    <label className="text-sm font-medium text-gray-700">
+                      Photo Mémofiche
+                    </label>
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      onChange={handlePhotoChange}
+                      className="text-base font-inter"
+                      disabled={loading}
+                    />
+                    {manualPhotoName && (
+                      <div className="text-xs text-gray-500">
+                        Fichier sélectionné : {manualPhotoName}
+                      </div>
+                    )}
+
+                    <label className="text-sm font-medium text-gray-700 mt-2">
+                      Titre Mémofiche
+                    </label>
+                    <Input
+                      type="text"
+                      placeholder="Titre de la mémofiche"
+                      value={manualTitle}
+                      onChange={e => setManualTitle(e.target.value)}
+                      disabled={loading}
+                      className="text-base font-inter"
+                    />
+
+                    <label className="text-sm font-medium text-gray-700 mt-2">
+                      Lien Youtube
+                    </label>
+                    <Input
+                      type="url"
+                      placeholder="https://youtube.com/xxx"
+                      value={manualYoutube}
+                      onChange={e => setManualYoutube(e.target.value)}
+                      disabled={loading}
+                      className="text-base font-inter"
+                    />
+
+                    <label className="text-sm font-medium text-gray-700 mt-2">
+                      Lien podcast
+                    </label>
+                    <Input
+                      type="url"
+                      placeholder="https://podcast.com/xxx"
+                      value={manualPodcast}
+                      onChange={e => setManualPodcast(e.target.value)}
+                      disabled={loading}
+                      className="text-base font-inter"
+                    />
+                  </div>
+                  {/* --- Fin champs manuels --- */}
                   <Input
                     placeholder="Entrez un sujet, ex : Otite du nourrisson"
                     value={theme}
