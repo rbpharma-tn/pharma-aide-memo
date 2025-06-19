@@ -28,9 +28,9 @@ serve(async (req: Request) => {
           headers: { ...corsHeaders, "Content-Type": "application/json" },
         }
       );
-    } else {
-      console.log(`[DEBUG Perplexity API] PERPLEXITY_API_KEY loaded, starts with: ${perplexityApiKey.slice(0, 6)}`);
     }
+
+    console.log(`[DEBUG Perplexity API] PERPLEXITY_API_KEY loaded successfully`);
 
     const { theme, supplement } = await req.json();
 
@@ -80,12 +80,15 @@ ${pastedContext}
 ${systemPrompt}`;
     }
 
-    // Appel API Perplexity
+    console.log("[DEBUG Perplexity API] Début de l'appel API");
+
+    // Appel API Perplexity avec headers corrigés
     const response = await fetch('https://api.perplexity.ai/chat/completions', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${perplexityApiKey}`,
         'Content-Type': 'application/json',
+        'Accept': 'application/json'
       },
       body: JSON.stringify({
         model: 'llama-3.1-sonar-large-128k-online',
@@ -110,7 +113,22 @@ ${systemPrompt}`;
       }),
     });
 
+    console.log(`[DEBUG Perplexity API] Statut de la réponse: ${response.status}`);
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`[DEBUG Perplexity API] Erreur ${response.status}: ${errorText}`);
+      return new Response(JSON.stringify({
+        error: `Erreur API Perplexity (${response.status}): ${errorText}`,
+        raw: errorText
+      }), {
+        status: response.status,
+        headers: { ...corsHeaders, "Content-Type": "application/json" }
+      });
+    }
+
     const data = await response.json();
+    console.log("[DEBUG Perplexity API] Réponse reçue avec succès");
 
     // Extraction du contenu
     const rawContent = data.choices?.[0]?.message?.content || "";
@@ -134,17 +152,20 @@ ${systemPrompt}`;
     }
 
     if (!parsed) {
+      console.error("[DEBUG Perplexity API] Impossible de parser la réponse JSON");
       return new Response(JSON.stringify({
         error: "La réponse Perplexity n'est pas au format attendu.",
         raw: rawContent
       }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
+    console.log("[DEBUG Perplexity API] Mémofiche générée avec succès");
     return new Response(JSON.stringify({ memofiche: parsed }), {
       status: 200,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (err: any) {
+    console.error("[DEBUG Perplexity API] Erreur dans catch:", err);
     return new Response(JSON.stringify({ error: err?.message || "Unknown error" }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" }
