@@ -19,6 +19,10 @@ serve(async (req: Request) => {
 
   try {
     // DEBUG: Vérification de la clé API
+    console.log("[DEBUG Perplexity API] Vérification de la clé API...");
+    console.log(`[DEBUG Perplexity API] Clé API présente: ${!!perplexityApiKey}`);
+    console.log(`[DEBUG Perplexity API] Longueur de la clé: ${perplexityApiKey?.length || 0}`);
+    
     if (!perplexityApiKey) {
       console.error("[DEBUG Perplexity API] PERPLEXITY_API_KEY absente ou vide.");
       return new Response(
@@ -30,8 +34,12 @@ serve(async (req: Request) => {
       );
     }
 
+    // Nettoyage de la clé API
+    const cleanApiKey = perplexityApiKey.trim();
+    console.log(`[DEBUG Perplexity API] Clé API nettoyée, longueur: ${cleanApiKey.length}`);
+
     // Vérification que la clé API a le bon format
-    if (!perplexityApiKey.startsWith("pplx-")) {
+    if (!cleanApiKey.startsWith("pplx-")) {
       console.error("[DEBUG Perplexity API] Format de clé API invalide");
       return new Response(
         JSON.stringify({ error: "Format de clé API Perplexity invalide. La clé doit commencer par 'pplx-'." }),
@@ -93,12 +101,14 @@ ${systemPrompt}`;
     }
 
     console.log("[DEBUG Perplexity API] Début de l'appel API");
+    console.log(`[DEBUG Perplexity API] URL: https://api.perplexity.ai/chat/completions`);
+    console.log(`[DEBUG Perplexity API] Authorization header: Bearer ${cleanApiKey.substring(0, 10)}...`);
 
     // Appel API Perplexity avec headers simplifiés et clé API correctement formatée
     const response = await fetch('https://api.perplexity.ai/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${perplexityApiKey.trim()}`,
+        'Authorization': `Bearer ${cleanApiKey}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
