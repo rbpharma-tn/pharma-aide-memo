@@ -10,6 +10,9 @@ import { ThemeSuggestionsSidebar } from "@/components/ThemeSuggestionsSidebar";
 import { ManualFields } from "@/components/ManualFields";
 import { SupplementDocumentsBlock } from "@/components/SupplementDocumentsBlock";
 import { ErrorWithDetails } from "@/components/ErrorWithDetails";
+import { AIProviderSelector } from "@/components/AIProviderSelector";
+import { useForm } from "react-hook-form";
+import { Form } from "@/components/ui/form";
 
 type MemoficheStruct = {
   title: string;
@@ -21,14 +24,27 @@ type MemoficheStruct = {
 type SupplementFile = {
   name: string;
   type: string;
-  content: string; // encodé en base64 ou texte brut selon le type
+  content: string;
+};
+
+type FormData = {
+  theme: string;
+  aiProvider: string;
 };
 
 export default function Generateur() {
-  const [theme, setTheme] = useState("");
   const [loading, setLoading] = useState(false);
   const [memofiche, setMemofiche] = useState<MemoficheStruct | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [rawError, setRawError] = useState<any>(null);
+
+  // Form avec validation
+  const form = useForm<FormData>({
+    defaultValues: {
+      theme: "",
+      aiProvider: "perplexity"
+    }
+  });
 
   // Champs manuels
   const [manualPhoto, setManualPhoto] = useState<File | null>(null);
@@ -41,8 +57,20 @@ export default function Generateur() {
   const [supplementFiles, setSupplementFiles] = useState<SupplementFile[]>([]);
   const [supplementText, setSupplementText] = useState("");
 
-  // Pour afficher le détail de l’erreur brute
-  const [rawError, setRawError] = useState<any>(null);
+  // URLs des edge functions selon le provider
+  const getEndpointUrl = (provider: string) => {
+    const baseUrl = "https://fxohysiwchvmyhzdtffq.functions.supabase.co";
+    switch (provider) {
+      case "perplexity":
+        return `${baseUrl}/generate-memofiche-perplexity`;
+      case "gemini":
+        return `${baseUrl}/generate-memofiche-gemini`;
+      case "together":
+        return `${baseUrl}/generate-memofiche-together`;
+      default:
+        return `${baseUrl}/generate-memofiche-perplexity`;
+    }
+  };
 
   // Gestion de l’upload multi-fichiers texte/pdf
   async function handleSupplementFilesChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -55,7 +83,7 @@ export default function Generateur() {
             reader.onload = () => {
               let content = "";
               if (file.type === "application/pdf") {
-                content = ""; // Extraction PDF côté backend
+                content = "";
               } else {
                 content = reader.result as string;
               }
@@ -86,8 +114,7 @@ export default function Generateur() {
     }
   }
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
+  async function handleSubmit(data: FormData) {
     setLoading(true);
     setError(null);
     setMemofiche(null);
@@ -99,29 +126,27 @@ export default function Generateur() {
         files: supplementFiles,
       };
 
-      const resp = await fetch(
-        "https://fxohysiwchvmyhzdtffq.functions.supabase.co/generate-memofiche-gemini",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ theme, supplement }),
-        }
-      );
-      const data = await resp.json();
+      const endpointUrl = getEndpointUrl(data.aiProvider);
+      
+      const resp = await fetch(endpointUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ theme: data.theme, supplement }),
+      });
+      const responseData = await resp.json();
 
-      // Ajout d'un log détaillé pour debug
-      console.log("[DEBUG Gemini response]", data);
+      console.log(`[DEBUG ${data.aiProvider} response]`, responseData);
 
-      if (!resp.ok || !data.memofiche) {
+      if (!resp.ok || !responseData.memofiche) {
         setError(
-          data?.error ||
-            "Erreur : la génération IA n’a pas abouti. Merci de réessayer plus tard."
+          responseData?.error ||
+            "Erreur : la génération IA n'a pas abouti. Merci de réessayer plus tard."
         );
-        setRawError(data?.raw || JSON.stringify(data, null, 2) || "Aucun détail transmis.");
+        setRawError(responseData?.raw || JSON.stringify(responseData, null, 2) || "Aucun détail transmis.");
         return;
       }
 
-      setMemofiche(data.memofiche);
+      setMemofiche(responseData.memofiche);
     } catch (err: any) {
       setError(
         typeof err === "string"
@@ -149,9 +174,7 @@ export default function Generateur() {
       <AppHeader />
       <SidebarProvider>
         <div className="flex flex-1 min-h-0 w-full">
-          {/* Sidebar Suggestions */}
-          <ThemeSuggestionsSidebar onSuggestionClick={setTheme} />
-          {/* Corps central */}
+          <ThemeSuggestionsSidebar onSuggestionClick={(theme) => form.setValue("theme", theme)} />
           <SidebarInset className="flex-1 flex flex-col items-center justify-start py-10 px-2 bg-gradient-to-b from-white to-gray-50 font-inter">
             <main className="w-full max-w-2xl mx-auto">
               <Card className="bg-white shadow-lg rounded-xl p-8 mb-8">
@@ -174,61 +197,62 @@ export default function Generateur() {
                     Sources IA
                   </Button>
                 </div>
-                <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-                  <Input
-                    placeholder="Entrez un sujet, ex : Otite du nourrisson"
-                    value={theme}
-                    onChange={e => setTheme(e.target.value)}
-                    required
-                    autoFocus
-                    className="text-lg font-inter py-4 px-5 rounded-lg shadow-sm border-2 border-indigo-200 w-full mb-2 focus:ring-2 focus:ring-indigo-300"
-                    disabled={loading}
-                  />
-                  {/* --- Champs Manuels sous le champ sujet --- */}
-                  <ManualFields
-                    manualPhotoName={manualPhotoName}
-                    loading={loading}
-                    manualTitle={manualTitle}
-                    manualYoutube={manualYoutube}
-                    manualPodcast={manualPodcast}
-                    onPhotoChange={handlePhotoChange}
-                    onTitleChange={e => setManualTitle(e.target.value)}
-                    onYoutubeChange={e => setManualYoutube(e.target.value)}
-                    onPodcastChange={e => setManualPodcast(e.target.value)}
-                  />
-                  {/* --- Support documentaire IA (text/pdf) --- */}
-                  <SupplementDocumentsBlock
-                    supplementFiles={supplementFiles}
-                    loading={loading}
-                    onFilesChange={handleSupplementFilesChange}
-                    supplementText={supplementText}
-                    onTextChange={e => setSupplementText(e.target.value)}
-                  />
-                  {/* --- Fin support documentaire --- */}
-                  <Button
-                    type="submit"
-                    className="mt-1 font-inter"
-                    disabled={loading || !theme.trim()}
-                  >
-                    {loading ? "Génération en cours..." : "Générer"}
-                  </Button>
-                  {loading && (
-                    <div className="text-gray-500 animate-pulse text-center font-inter">
-                      Patientez un instant…<br />Votre mémofiche se prépare !
-                    </div>
-                  )}
-                  <ErrorWithDetails error={error} rawError={rawError} />
-                  {/* Affichage direct du rawError à l'écran, même si vide */}
-                  {rawError && (
-                    <div className="mt-2 text-xs text-orange-800 bg-orange-50 border rounded p-2 font-mono whitespace-pre-wrap break-all">
-                      <strong>Erreur brute/Debug :</strong>
-                      <br />
-                      {typeof rawError === "string"
-                        ? rawError
-                        : JSON.stringify(rawError, null, 2)}
-                    </div>
-                  )}
-                </form>
+                <Form {...form}>
+                  <form className="flex flex-col gap-4" onSubmit={form.handleSubmit(handleSubmit)}>
+                    <Input
+                      placeholder="Entrez un sujet, ex : Otite du nourrisson"
+                      {...form.register("theme", { required: true })}
+                      autoFocus
+                      className="text-lg font-inter py-4 px-5 rounded-lg shadow-sm border-2 border-indigo-200 w-full mb-2 focus:ring-2 focus:ring-indigo-300"
+                      disabled={loading}
+                    />
+                    
+                    <AIProviderSelector form={form} disabled={loading} />
+                    
+                    <ManualFields
+                      manualPhotoName={manualPhotoName}
+                      loading={loading}
+                      manualTitle={manualTitle}
+                      manualYoutube={manualYoutube}
+                      manualPodcast={manualPodcast}
+                      onPhotoChange={handlePhotoChange}
+                      onTitleChange={e => setManualTitle(e.target.value)}
+                      onYoutubeChange={e => setManualYoutube(e.target.value)}
+                      onPodcastChange={e => setManualPodcast(e.target.value)}
+                    />
+                    
+                    <SupplementDocumentsBlock
+                      supplementFiles={supplementFiles}
+                      loading={loading}
+                      onFilesChange={handleSupplementFilesChange}
+                      supplementText={supplementText}
+                      onTextChange={e => setSupplementText(e.target.value)}
+                    />
+                    
+                    <Button
+                      type="submit"
+                      className="mt-1 font-inter"
+                      disabled={loading || !form.watch("theme")?.trim()}
+                    >
+                      {loading ? "Génération en cours..." : "Générer"}
+                    </Button>
+                    {loading && (
+                      <div className="text-gray-500 animate-pulse text-center font-inter">
+                        Patientez un instant…<br />Votre mémofiche se prépare !
+                      </div>
+                    )}
+                    <ErrorWithDetails error={error} rawError={rawError} />
+                    {rawError && (
+                      <div className="mt-2 text-xs text-orange-800 bg-orange-50 border rounded p-2 font-mono whitespace-pre-wrap break-all">
+                        <strong>Erreur brute/Debug :</strong>
+                        <br />
+                        {typeof rawError === "string"
+                          ? rawError
+                          : JSON.stringify(rawError, null, 2)}
+                      </div>
+                    )}
+                  </form>
+                </Form>
               </Card>
               {memofiche && (
                 <div className="mt-6">
