@@ -30,7 +30,19 @@ serve(async (req: Request) => {
       );
     }
 
-    console.log(`[DEBUG Perplexity API] PERPLEXITY_API_KEY loaded successfully`);
+    // Vérification que la clé API a le bon format
+    if (!perplexityApiKey.startsWith("pplx-")) {
+      console.error("[DEBUG Perplexity API] Format de clé API invalide");
+      return new Response(
+        JSON.stringify({ error: "Format de clé API Perplexity invalide. La clé doit commencer par 'pplx-'." }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    console.log(`[DEBUG Perplexity API] PERPLEXITY_API_KEY chargée avec succès, format valide`);
 
     const { theme, supplement } = await req.json();
 
@@ -82,13 +94,12 @@ ${systemPrompt}`;
 
     console.log("[DEBUG Perplexity API] Début de l'appel API");
 
-    // Appel API Perplexity avec headers corrigés
+    // Appel API Perplexity avec headers simplifiés et clé API correctement formatée
     const response = await fetch('https://api.perplexity.ai/chat/completions', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${perplexityApiKey}`,
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        'Authorization': `Bearer ${perplexityApiKey.trim()}`,
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         model: 'llama-3.1-sonar-large-128k-online',
@@ -118,8 +129,17 @@ ${systemPrompt}`;
     if (!response.ok) {
       const errorText = await response.text();
       console.error(`[DEBUG Perplexity API] Erreur ${response.status}: ${errorText}`);
+      
+      // Messages d'erreur spécifiques selon le code de statut
+      let errorMessage = `Erreur API Perplexity (${response.status})`;
+      if (response.status === 401) {
+        errorMessage = "Clé API Perplexity invalide ou expirée. Vérifiez votre clé dans les paramètres.";
+      } else if (response.status === 429) {
+        errorMessage = "Limite de taux d'API Perplexity atteinte. Veuillez réessayer dans quelques minutes.";
+      }
+      
       return new Response(JSON.stringify({
-        error: `Erreur API Perplexity (${response.status}): ${errorText}`,
+        error: errorMessage,
         raw: errorText
       }), {
         status: response.status,
